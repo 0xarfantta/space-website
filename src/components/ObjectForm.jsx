@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CATEGORIES, PLACEHOLDER_IMAGE } from "@/lib/data";
-import { createObject, getById, updateObject } from "@/lib/storage";
+import {
+  createObject,
+  getById,
+  initStorage,
+  updateObject,
+} from "@/lib/storage";
 
 const EMPTY = {
   name: "",
@@ -28,7 +33,14 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
   const [missing, setMissing] = useState(false);
 
   useEffect(() => {
-    if (mode !== "edit" || !objectId) return;
+    // Ensure seed catalog exists before lookup (direct deep-link to edit)
+    initStorage();
+
+    if (mode !== "edit" || !objectId) {
+      setReady(true);
+      return;
+    }
+
     const obj = getById(objectId);
     if (!obj) {
       setMissing(true);

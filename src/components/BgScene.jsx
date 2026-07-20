@@ -5,7 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 const STAR_COUNT = 48;
 const SHOOTING_COUNT = 4;
 
-/** Deterministic pseudo-random (avoids hydration mismatch) */
+/** Deterministic pseudo-random (identical on server + client) */
 function seeded(n) {
   const x = Math.sin(n * 12.9898) * 43758.5453;
   return x - Math.floor(x);
@@ -34,7 +34,7 @@ function makeShooters(count) {
   }));
 }
 
-// Stable across server + client
+// Module-level constants — same values during SSR and client hydration
 const STARS = makeStars(STAR_COUNT);
 const SHOOTERS = makeShooters(SHOOTING_COUNT);
 
@@ -43,8 +43,11 @@ export default function BgScene() {
   const target = useRef({ x: 0, y: 0 });
   const current = useRef({ x: 0, y: 0 });
   const rafRef = useRef(0);
-  const [reducedMotion, setReducedMotion] = useState(false);
+
+  // Always start false so server HTML === first client render.
+  // Motion prefs & parallax only kick in after mount.
   const [mounted, setMounted] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   const animate = useCallback(() => {
     current.current.x += (target.current.x - current.current.x) * 0.06;
@@ -69,6 +72,7 @@ export default function BgScene() {
 
   useEffect(() => {
     setMounted(true);
+
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mq.matches);
 
@@ -106,8 +110,10 @@ export default function BgScene() {
     };
   }, [animate, mounted, reducedMotion]);
 
+  const motionOn = mounted && !reducedMotion;
+
   const parallax = (factorX, factorY) =>
-    mounted && !reducedMotion
+    motionOn
       ? {
           transform: `translate3d(calc(var(--mx) * ${factorX}px), calc(var(--my) * ${factorY}px), 0)`,
         }
@@ -118,6 +124,8 @@ export default function BgScene() {
       ref={rootRef}
       className="bg-scene-root pointer-events-none fixed inset-0 z-0 overflow-hidden bg-orbit-deep"
       aria-hidden="true"
+      // Ignore attribute diffs from browser extensions on this subtree
+      suppressHydrationWarning
       style={{
         ["--mx"]: "0",
         ["--my"]: "0",
@@ -127,13 +135,13 @@ export default function BgScene() {
     >
       <div className="absolute inset-0 bg-gradient-to-b from-[#0b061c] via-[#120a2e] to-[#06040f]" />
 
-      {/* Wallpaper */}
+      {/* Wallpaper — animation class only after mount */}
       <div
         className={`absolute -inset-[12%] bg-space-photo bg-cover bg-center will-change-transform ${
-          !reducedMotion ? "bg-layer-kenburns" : ""
+          motionOn ? "bg-layer-kenburns" : ""
         }`}
         style={
-          mounted && !reducedMotion
+          motionOn
             ? {
                 transform:
                   "translate3d(calc(var(--mx) * -18px), calc(var(--my) * -14px), 0) scale(1.12)",
@@ -142,11 +150,9 @@ export default function BgScene() {
         }
       />
 
-      {/* Light-mode frosted veil (hidden in dark via CSS) */}
       <div className="bg-scene-veil absolute inset-0 bg-gradient-to-b from-white/75 via-slate-100/65 to-indigo-50/70 opacity-0 transition-opacity duration-300" />
 
-      {/* Cursor spotlight — only after mount to avoid SSR noise */}
-      {mounted && !reducedMotion && (
+      {motionOn && (
         <div
           className="absolute inset-0 opacity-90"
           style={{
@@ -169,47 +175,47 @@ export default function BgScene() {
       {/* Nebula orbs */}
       <div
         className={`absolute -left-16 top-[8%] h-[48vw] max-h-[560px] w-[48vw] max-w-[560px] rounded-full bg-indigo-500/25 blur-[100px] ${
-          !reducedMotion ? "animate-orb-a" : ""
+          motionOn ? "animate-orb-a" : ""
         }`}
         style={parallax(24, 18)}
       />
       <div
         className={`absolute -right-10 bottom-[10%] h-[42vw] max-h-[500px] w-[42vw] max-w-[500px] rounded-full bg-violet-500/20 blur-[100px] ${
-          !reducedMotion ? "animate-orb-b" : ""
+          motionOn ? "animate-orb-b" : ""
         }`}
         style={parallax(-20, 22)}
       />
       <div
         className={`absolute left-[35%] top-[42%] h-[30vw] max-h-[360px] w-[30vw] max-w-[360px] rounded-full bg-fuchsia-400/15 blur-[90px] ${
-          !reducedMotion ? "animate-orb-c" : ""
+          motionOn ? "animate-orb-c" : ""
         }`}
         style={parallax(14, -16)}
       />
 
-      {/* Stars — deterministic positions (SSR-safe) */}
+      {/* Stars — static on SSR / first paint; animate only after mount */}
       <div className="absolute inset-0" style={parallax(-8, -6)}>
         {STARS.map((s) => (
           <span
             key={s.id}
             className={`absolute rounded-full bg-white ${
-              !reducedMotion ? "star" : ""
+              motionOn ? "star" : ""
             }`}
             style={{
               left: `${s.left}%`,
               top: `${s.top}%`,
-              width: s.size,
-              height: s.size,
+              width: `${s.size}px`,
+              height: `${s.size}px`,
               opacity: s.opacity,
               boxShadow: `0 0 ${s.size * 3}px rgba(199, 210, 254, 0.85)`,
-              animationDelay: `${s.delay}s`,
-              animationDuration: `${s.duration}s`,
+              animationDelay: motionOn ? `${s.delay}s` : undefined,
+              animationDuration: motionOn ? `${s.duration}s` : undefined,
             }}
           />
         ))}
       </div>
 
-      {/* Shooting stars */}
-      {!reducedMotion &&
+      {/* Shooting stars only after mount (avoid SSR/client tree mismatch) */}
+      {motionOn &&
         SHOOTERS.map((s) => (
           <span
             key={s.id}
@@ -217,7 +223,7 @@ export default function BgScene() {
             style={{
               top: `${s.top}%`,
               left: `${s.left}%`,
-              width: s.length,
+              width: `${s.length}px`,
               animationDelay: `${s.delay}s`,
               animationDuration: `${s.duration}s`,
             }}

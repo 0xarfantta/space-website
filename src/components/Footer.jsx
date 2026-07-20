@@ -6,22 +6,36 @@ export default function Footer() {
       className="glass mt-6 border-x-0 border-b-0 py-3"
       style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 text-xs text-black xs:flex-row xs:flex-wrap xs:items-center xs:justify-between sm:gap-3">
+      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 text-xs text-slate-200 xs:flex-row xs:flex-wrap xs:items-center xs:justify-between sm:gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <strong className="text-sm text-black">
-            Orbit<span className="text-black">ra</span>
+          <strong className="text-sm text-white">
+            Orbit<span className="text-indigo-300">ra</span>
           </strong>
-          <span className="text-black/80">· Explore the universe</span>
+          <span className="text-slate-300">· Explore the universe</span>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Link href="/#catalog" className="hover:text-black/70">
+          <Link
+            href="/#catalog"
+            className="text-slate-200 transition hover:text-white"
+          >
             Catalog
           </Link>
-          <Link href="/#about" className="hover:text-black/70">
+          <Link
+            href="/#about"
+            className="text-slate-200 transition hover:text-white"
+          >
             About
           </Link>
+          <Link
+            href="/login"
+            className="text-slate-200 transition hover:text-white"
+          >
+            Admin
+          </Link>
         </div>
-        <p className="m-0 opacity-75">&copy; {new Date().getFullYear()} Orbitra</p>
+        <p className="m-0 text-slate-400" suppressHydrationWarning>
+          &copy; {new Date().getFullYear()} Orbitra
+        </p>
       </div>
     </footer>
   );
