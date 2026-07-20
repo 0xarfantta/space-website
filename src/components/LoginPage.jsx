@@ -50,22 +50,25 @@ export default function LoginPage() {
     return Object.keys(next).length === 0;
   }
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
     setError("");
 
     if (!validate()) return;
 
     setSubmitting(true);
-    const result = login(username, password);
-
-    if (!result.ok) {
-      setError(result.error || "Login gagal. Coba lagi.");
+    try {
+      const result = await login(username, password);
+      if (!result.ok) {
+        setError(result.error || "Login gagal. Coba lagi.");
+        setSubmitting(false);
+        return;
+      }
+      router.replace(nextPath);
+    } catch {
+      setError("Login gagal. Coba lagi.");
       setSubmitting(false);
-      return;
     }
-
-    router.replace(nextPath);
   }
 
   if (ready && isAdmin) {

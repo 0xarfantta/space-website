@@ -14,3 +14,10 @@ Lakukan otomatis tanpa diminta ulang, kecuali:
 - push gagal (auth/konflik) — laporkan errornya
 
 Repo remote: `https://github.com/0xarfantta/space-website.git`
+
+## Backend
+
+- Prisma 5 + SQLite (`DATABASE_URL=file:./dev.db`)
+- API under `src/app/api/`
+- Do not commit `.env` or `prisma/*.db`
+- After schema change: `npx prisma migrate dev`

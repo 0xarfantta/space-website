@@ -26,12 +26,6 @@ export default function Footer() {
           >
             About
           </Link>
-          <Link
-            href="/login"
-            className="text-slate-200 transition hover:text-white"
-          >
-            Admin
-          </Link>
         </div>
         <p className="m-0 text-slate-400" suppressHydrationWarning>
           &copy; {new Date().getFullYear()} Orbitra

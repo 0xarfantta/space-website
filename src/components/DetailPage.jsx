@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { PLACEHOLDER_IMAGE } from "@/lib/data";
-import { getById, initStorage } from "@/lib/storage";
+import { apiGetObject } from "@/lib/api";
 import { useAuth } from "@/hooks/useAuth";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -18,9 +18,27 @@ export default function DetailPage() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    initStorage();
-    setObj(id ? getById(id) : null);
-    setReady(true);
+    let cancelled = false;
+
+    (async () => {
+      if (!id) {
+        setObj(null);
+        setReady(true);
+        return;
+      }
+      try {
+        const item = await apiGetObject(id);
+        if (!cancelled) setObj(item);
+      } catch {
+        if (!cancelled) setObj(null);
+      } finally {
+        if (!cancelled) setReady(true);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   return (
@@ -33,7 +51,9 @@ export default function DetailPage() {
 
         {ready && !id && (
           <div className="detail-content-panel max-w-lg rounded-2xl p-6">
-            <h1 className="mb-2 text-xl font-semibold text-white">No object selected</h1>
+            <h1 className="mb-2 text-xl font-semibold text-white">
+              No object selected
+            </h1>
             <p className="mb-4 text-sm text-slate-200">
               Open a detail page with ?id=…
             </p>
@@ -45,10 +65,10 @@ export default function DetailPage() {
 
         {ready && id && !obj && (
           <div className="detail-content-panel max-w-lg rounded-2xl p-6">
-            <h1 className="mb-2 text-xl font-semibold text-white">Object not found</h1>
-            <p className="mb-4 text-sm text-slate-200">
-              No object with id: {id}
-            </p>
+            <h1 className="mb-2 text-xl font-semibold text-white">
+              Object not found
+            </h1>
+            <p className="mb-4 text-sm text-slate-200">No object with id: {id}</p>
             <Link href="/" className="btn-primary">
               Back Home
             </Link>
@@ -65,7 +85,6 @@ export default function DetailPage() {
               />
             </div>
 
-            {/* Content panel — solid glass for contrast */}
             <div className="detail-panel-enter detail-panel-enter--content detail-content-panel rounded-3xl p-5 sm:p-7">
               <Link
                 href="/#catalog"

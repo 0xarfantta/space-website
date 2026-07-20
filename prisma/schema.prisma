@@ -1,0 +1,28 @@
+// Orbitra — SQLite database (local file). Works with Prisma 5.
+// DATABASE_URL="file:./dev.db"
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model CelestialObject {
+  id             String   @id @default(cuid())
+  name           String
+  scientificName String
+  category       String
+  diameter       String   @default("")
+  mass           String   @default("")
+  gravity        String   @default("")
+  temperature    String   @default("")
+  distance       String   @default("")
+  yearDiscovered String   @default("")
+  imageUrl       String   @default("")
+  description    String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

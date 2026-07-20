@@ -4,12 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CATEGORIES, PLACEHOLDER_IMAGE } from "@/lib/data";
-import {
-  createObject,
-  getById,
-  initStorage,
-  updateObject,
-} from "@/lib/storage";
+import { apiCreateObject, apiGetObject, apiUpdateObject } from "@/lib/api";
 
 const EMPTY = {
   name: "",
@@ -31,36 +26,50 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
   const [errors, setErrors] = useState({});
   const [ready, setReady] = useState(mode === "create");
   const [missing, setMissing] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
-    // Ensure seed catalog exists before lookup (direct deep-link to edit)
-    initStorage();
-
     if (mode !== "edit" || !objectId) {
       setReady(true);
       return;
     }
 
-    const obj = getById(objectId);
-    if (!obj) {
-      setMissing(true);
-      setReady(true);
-      return;
-    }
-    setForm({
-      name: obj.name || "",
-      scientificName: obj.scientificName || "",
-      category: obj.category || "Planet",
-      diameter: obj.diameter || "",
-      mass: obj.mass || "",
-      gravity: obj.gravity || "",
-      temperature: obj.temperature || "",
-      distance: obj.distance || "",
-      yearDiscovered: obj.yearDiscovered || "",
-      imageUrl: obj.imageUrl || "",
-      description: obj.description || "",
-    });
-    setReady(true);
+    let cancelled = false;
+    (async () => {
+      try {
+        const obj = await apiGetObject(objectId);
+        if (cancelled) return;
+        if (!obj) {
+          setMissing(true);
+          setReady(true);
+          return;
+        }
+        setForm({
+          name: obj.name || "",
+          scientificName: obj.scientificName || "",
+          category: obj.category || "Planet",
+          diameter: obj.diameter || "",
+          mass: obj.mass || "",
+          gravity: obj.gravity || "",
+          temperature: obj.temperature || "",
+          distance: obj.distance || "",
+          yearDiscovered: obj.yearDiscovered || "",
+          imageUrl: obj.imageUrl || "",
+          description: obj.description || "",
+        });
+        setReady(true);
+      } catch {
+        if (!cancelled) {
+          setMissing(true);
+          setReady(true);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
   }, [mode, objectId]);
 
   function onChange(e) {
@@ -71,14 +80,15 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
   function validate() {
     const next = {};
     if (!form.name.trim()) next.name = "Name is required";
-    if (!form.scientificName.trim()) next.scientificName = "Scientific name is required";
+    if (!form.scientificName.trim())
+      next.scientificName = "Scientific name is required";
     if (!form.category) next.category = "Category is required";
     if (!form.description.trim()) next.description = "Description is required";
     setErrors(next);
     return Object.keys(next).length === 0;
   }
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
     if (!validate()) return;
 
@@ -96,12 +106,19 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
       description: form.description.trim(),
     };
 
-    if (mode === "edit" && objectId) {
-      updateObject(objectId, payload);
-      router.push(`/detail?id=${encodeURIComponent(objectId)}`);
-    } else {
-      createObject(payload);
-      router.push("/dashboard");
+    setSubmitting(true);
+    setSubmitError("");
+    try {
+      if (mode === "edit" && objectId) {
+        await apiUpdateObject(objectId, payload);
+        router.push(`/detail?id=${encodeURIComponent(objectId)}`);
+      } else {
+        await apiCreateObject(payload);
+        router.push("/dashboard");
+      }
+    } catch (err) {
+      setSubmitError(err.message || "Save failed");
+      setSubmitting(false);
     }
   }
 
@@ -150,6 +167,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 name="name"
                 value={form.name}
                 onChange={onChange}
+                disabled={submitting}
               />
               {errors.name && (
                 <em className="text-xs not-italic text-red-300">{errors.name}</em>
@@ -162,6 +180,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 name="scientificName"
                 value={form.scientificName}
                 onChange={onChange}
+                disabled={submitting}
               />
               {errors.scientificName && (
                 <em className="text-xs not-italic text-red-300">
@@ -176,6 +195,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 name="category"
                 value={form.category}
                 onChange={onChange}
+                disabled={submitting}
               >
                 {CATEGORIES.map((c) => (
                   <option key={c} value={c} className="bg-slate-900 text-white">
@@ -191,6 +211,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 name="yearDiscovered"
                 value={form.yearDiscovered}
                 onChange={onChange}
+                disabled={submitting}
               />
             </label>
             <label className="admin-label">
@@ -200,6 +221,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 name="diameter"
                 value={form.diameter}
                 onChange={onChange}
+                disabled={submitting}
               />
             </label>
             <label className="admin-label">
@@ -209,6 +231,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 name="mass"
                 value={form.mass}
                 onChange={onChange}
+                disabled={submitting}
               />
             </label>
             <label className="admin-label">
@@ -218,6 +241,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 name="gravity"
                 value={form.gravity}
                 onChange={onChange}
+                disabled={submitting}
               />
             </label>
             <label className="admin-label">
@@ -227,6 +251,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 name="temperature"
                 value={form.temperature}
                 onChange={onChange}
+                disabled={submitting}
               />
             </label>
             <label className="admin-label md:col-span-2">
@@ -236,6 +261,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 name="distance"
                 value={form.distance}
                 onChange={onChange}
+                disabled={submitting}
               />
             </label>
             <label className="admin-label md:col-span-2">
@@ -245,6 +271,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 name="imageUrl"
                 value={form.imageUrl}
                 onChange={onChange}
+                disabled={submitting}
               />
             </label>
             <div className="admin-label md:col-span-2">
@@ -270,6 +297,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 rows={5}
                 value={form.description}
                 onChange={onChange}
+                disabled={submitting}
               />
               {errors.description && (
                 <em className="text-xs not-italic text-red-300">
@@ -279,12 +307,22 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
             </label>
           </div>
 
+          {submitError && (
+            <p className="mt-4 rounded-xl border border-red-400/40 bg-red-500/20 px-3 py-2 text-sm text-red-100">
+              {submitError}
+            </p>
+          )}
+
           <div className="mt-6 flex flex-wrap justify-end gap-3">
             <Link href="/dashboard" className="btn-ghost">
               Cancel
             </Link>
-            <button type="submit" className="btn-primary">
-              {mode === "edit" ? "Save Changes" : "Save Object"}
+            <button type="submit" className="btn-primary" disabled={submitting}>
+              {submitting
+                ? "Saving…"
+                : mode === "edit"
+                  ? "Save Changes"
+                  : "Save Object"}
             </button>
           </div>
         </form>

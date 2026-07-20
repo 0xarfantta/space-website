@@ -1,35 +1,41 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { getSession, login as authLogin, logout as authLogout } from "@/lib/auth";
+import { apiGetSession, apiLogin, apiLogout } from "@/lib/api";
 
 export function useAuth() {
   const [session, setSession] = useState(null);
   const [ready, setReady] = useState(false);
 
-  const refresh = useCallback(() => {
-    setSession(getSession());
-    setReady(true);
+  const refresh = useCallback(async () => {
+    try {
+      const s = await apiGetSession();
+      setSession(s);
+    } catch {
+      setSession(null);
+    } finally {
+      setReady(true);
+    }
   }, []);
 
   useEffect(() => {
     refresh();
   }, [refresh]);
 
-  const login = useCallback(
-    (username, password) => {
-      const result = authLogin(username, password);
-      if (result.ok) {
-        setSession(result.session);
-      }
-      return result;
-    },
-    []
-  );
+  const login = useCallback(async (username, password) => {
+    const result = await apiLogin(username, password);
+    if (result.ok) {
+      setSession(result.session);
+    }
+    return result;
+  }, []);
 
-  const logout = useCallback(() => {
-    authLogout();
-    setSession(null);
+  const logout = useCallback(async () => {
+    try {
+      await apiLogout();
+    } finally {
+      setSession(null);
+    }
   }, []);
 
   return {

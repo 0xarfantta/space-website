@@ -57,12 +57,16 @@ export default function DashboardPage() {
       );
   }, [objects, query]);
 
-  function handleDelete(id, name) {
+  async function handleDelete(id, name) {
     if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
-    remove(id);
+    try {
+      await remove(id);
+    } catch (err) {
+      alert(err.message || "Delete failed");
+    }
   }
 
-  function handleReset() {
+  async function handleReset() {
     if (
       !confirm(
         "Reset all objects to default seed data? Custom objects will be lost."
@@ -70,7 +74,11 @@ export default function DashboardPage() {
     ) {
       return;
     }
-    reset();
+    try {
+      await reset();
+    } catch (err) {
+      alert(err.message || "Reset failed");
+    }
   }
 
   const navItems = [
@@ -180,8 +188,8 @@ export default function DashboardPage() {
             <button
               type="button"
               className="btn-ghost btn-sm"
-              onClick={() => {
-                logout();
+              onClick={async () => {
+                await logout();
                 router.push("/");
               }}
             >
