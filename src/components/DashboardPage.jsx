@@ -58,18 +58,18 @@ export default function DashboardPage() {
   }, [objects, query]);
 
   async function handleDelete(id, name) {
-    if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+    if (!confirm(`Hapus "${name}"? Tindakan ini tidak dapat dibatalkan.`)) return;
     try {
       await remove(id);
     } catch (err) {
-      alert(err.message || "Delete failed");
+      alert(err.message || "Gagal menghapus");
     }
   }
 
   async function handleReset() {
     if (
       !confirm(
-        "Reset all objects to default seed data? Custom objects will be lost."
+        "Reset semua objek ke data seed bawaan? Objek kustom akan hilang."
       )
     ) {
       return;
@@ -77,15 +77,15 @@ export default function DashboardPage() {
     try {
       await reset();
     } catch (err) {
-      alert(err.message || "Reset failed");
+      alert(err.message || "Gagal mereset");
     }
   }
 
   const navItems = [
-    { href: "#statistics", label: "Dashboard", icon: "▦" },
-    { href: "#objects", label: "Objects", icon: "◎" },
-    { href: "#categories", label: "Categories", icon: "◈" },
-    { href: "#settings", label: "Settings", icon: "⚙" },
+    { href: "#statistics", label: "Dasbor", icon: "▦" },
+    { href: "#objects", label: "Objek", icon: "◎" },
+    { href: "#categories", label: "Kategori", icon: "◈" },
+    { href: "#settings", label: "Pengaturan", icon: "⚙" },
   ];
 
   return (
@@ -95,7 +95,7 @@ export default function DashboardPage() {
         <button
           type="button"
           className="fixed inset-0 z-[205] bg-black/60 backdrop-blur-sm md:hidden"
-          aria-label="Close menu"
+          aria-label="Tutup menu"
           onClick={() => setCollapsed(true)}
         />
       )}
@@ -127,7 +127,7 @@ export default function DashboardPage() {
             type="button"
             className="admin-icon-btn hidden md:inline-flex"
             onClick={toggleSidebar}
-            aria-label="Toggle sidebar"
+            aria-label="Lipat sidebar"
           >
             {collapsed ? "»" : "«"}
           </button>
@@ -150,9 +150,9 @@ export default function DashboardPage() {
               {!collapsed && <span>{item.label}</span>}
             </a>
           ))}
-          <Link href="/" title="Back to Home" className="admin-nav-link">
+          <Link href="/" title="Kembali ke beranda" className="admin-nav-link">
             <span className="w-6 text-center text-indigo-200">←</span>
-            {!collapsed && <span>Back to Home</span>}
+            {!collapsed && <span>Kembali ke Beranda</span>}
           </Link>
         </nav>
       </aside>
@@ -165,16 +165,16 @@ export default function DashboardPage() {
               type="button"
               className="admin-icon-btn md:hidden"
               onClick={toggleSidebar}
-              aria-label="Open sidebar"
+              aria-label="Buka sidebar"
             >
               ☰
             </button>
             <div className="min-w-0">
               <h1 className="admin-title truncate text-lg sm:text-xl">
-                Dashboard
+                Dasbor
               </h1>
               <p className="admin-faint mt-0.5 hidden sm:block">
-                Overview of your catalog
+                Ringkasan katalog Anda
               </p>
             </div>
           </div>
@@ -183,7 +183,7 @@ export default function DashboardPage() {
               {session?.username || "admin"}
             </span>
             <Link href="/add-object" className="btn-primary btn-sm">
-              + Add
+              + Tambah
             </Link>
             <button
               type="button"
@@ -193,7 +193,7 @@ export default function DashboardPage() {
                 router.push("/");
               }}
             >
-              Logout
+              Keluar
             </button>
           </div>
         </header>
@@ -202,18 +202,18 @@ export default function DashboardPage() {
         <section id="statistics" className="mb-6 scroll-mt-6">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {[
-              { label: "Total Objects", value: ready ? stats.totalObjects : "—" },
+              { label: "Total Objek", value: ready ? stats.totalObjects : "—" },
               {
-                label: "Categories",
+                label: "Kategori",
                 value: ready ? stats.totalCategories : "—",
               },
               {
-                label: "Latest Object",
+                label: "Objek Terbaru",
                 value: stats.latestObject?.name || "—",
                 small: true,
               },
               {
-                label: "Top Category",
+                label: "Kategori Teratas",
                 value: stats.topCategory
                   ? `${stats.topCategory.name} (${stats.topCategory.count})`
                   : "—",
@@ -243,7 +243,7 @@ export default function DashboardPage() {
         <section id="objects" className="mb-6 scroll-mt-6">
           <div className="admin-panel p-3 sm:p-4 md:p-5">
             <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <h2 className="admin-title text-lg">All Objects</h2>
+              <h2 className="admin-title text-lg">Semua Objek</h2>
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                 <div className="admin-search">
                   <span className="text-slate-300" aria-hidden="true">
@@ -252,13 +252,13 @@ export default function DashboardPage() {
                   <input
                     type="search"
                     className="w-full min-w-0 bg-transparent text-sm font-medium text-white outline-none placeholder:text-slate-400 sm:w-44"
-                    placeholder="Search…"
+                    placeholder="Cari…"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
                   />
                 </div>
                 <Link href="/add-object" className="btn-ghost btn-sm">
-                  Add
+                  Tambah
                 </Link>
               </div>
             </div>
@@ -268,11 +268,11 @@ export default function DashboardPage() {
               <table className="w-full">
                 <thead>
                   <tr className="admin-table-head">
-                    <th className="px-3 py-3">Object</th>
-                    <th className="px-3 py-3">Category</th>
-                    <th className="px-3 py-3">Distance</th>
-                    <th className="px-3 py-3">Year</th>
-                    <th className="px-3 py-3 text-right">Actions</th>
+                    <th className="px-3 py-3">Objek</th>
+                    <th className="px-3 py-3">Kategori</th>
+                    <th className="px-3 py-3">Jarak</th>
+                    <th className="px-3 py-3">Tahun</th>
+                    <th className="px-3 py-3 text-right">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -320,14 +320,14 @@ export default function DashboardPage() {
                           href={`/edit-object?id=${encodeURIComponent(obj.id)}`}
                           className="btn-ghost btn-sm mr-1"
                         >
-                          Edit
+                          Ubah
                         </Link>
                         <button
                           type="button"
                           className="btn-danger btn-sm"
                           onClick={() => handleDelete(obj.id, obj.name)}
                         >
-                          Delete
+                          Hapus
                         </button>
                       </td>
                     </tr>
@@ -361,22 +361,22 @@ export default function DashboardPage() {
                     </div>
                   </div>
                   <div className="mb-3 space-y-1 text-sm text-slate-200">
-                    <p>Distance: {obj.distance || "—"}</p>
-                    <p>Year: {obj.yearDiscovered || "—"}</p>
+                    <p>Jarak: {obj.distance || "—"}</p>
+                    <p>Tahun: {obj.yearDiscovered || "—"}</p>
                   </div>
                   <div className="flex gap-2">
                     <Link
                       href={`/edit-object?id=${encodeURIComponent(obj.id)}`}
                       className="btn-ghost btn-sm flex-1"
                     >
-                      Edit
+                      Ubah
                     </Link>
                     <button
                       type="button"
                       className="btn-danger btn-sm flex-1"
                       onClick={() => handleDelete(obj.id, obj.name)}
                     >
-                      Delete
+                      Hapus
                     </button>
                   </div>
                 </div>
@@ -385,7 +385,7 @@ export default function DashboardPage() {
 
             {filtered.length === 0 && (
               <p className="py-10 text-center text-sm font-medium text-slate-300">
-                No objects found.
+                Objek tidak ditemukan.
               </p>
             )}
           </div>
@@ -394,7 +394,7 @@ export default function DashboardPage() {
         {/* Categories */}
         <section id="categories" className="mb-6 scroll-mt-6">
           <div className="admin-panel p-4 sm:p-5">
-            <h2 className="admin-title mb-4 text-lg">Categories</h2>
+            <h2 className="admin-title mb-4 text-lg">Kategori</h2>
             <div className="flex flex-wrap gap-2 sm:gap-3">
               {CATEGORIES.map((cat) => (
                 <div key={cat} className="admin-chip">
@@ -411,12 +411,12 @@ export default function DashboardPage() {
         {/* Settings */}
         <section id="settings" className="scroll-mt-6 pb-8">
           <div className="admin-panel max-w-md p-4 sm:p-5">
-            <h2 className="admin-title mb-2 text-lg">Settings</h2>
+            <h2 className="admin-title mb-2 text-lg">Pengaturan</h2>
             <p className="admin-subtitle mb-4">
-              Reset catalog data to the default seed objects.
+              Reset data katalog ke objek seed bawaan.
             </p>
             <button type="button" className="btn-ghost" onClick={handleReset}>
-              Reset to seed data
+              Reset ke data seed
             </button>
           </div>
         </section>

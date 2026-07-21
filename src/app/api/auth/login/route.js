@@ -12,7 +12,7 @@ export async function POST(request) {
     body = await request.json();
   } catch {
     return NextResponse.json(
-      { error: "Invalid JSON body." },
+      { error: "Body JSON tidak valid." },
       { status: 400 }
     );
   }
@@ -22,7 +22,7 @@ export async function POST(request) {
 
   if (!username || !password) {
     return NextResponse.json(
-      { error: "Username dan password wajib diisi." },
+      { error: "Nama pengguna dan kata sandi wajib diisi." },
       { status: 400 }
     );
   }
@@ -30,7 +30,7 @@ export async function POST(request) {
   const admin = getAdminCredentials();
   if (username !== admin.username || password !== admin.password) {
     return NextResponse.json(
-      { error: "Username atau password salah." },
+      { error: "Nama pengguna atau kata sandi salah." },
       { status: 401 }
     );
   }

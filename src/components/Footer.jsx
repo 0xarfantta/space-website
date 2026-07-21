@@ -11,20 +11,26 @@ export default function Footer() {
           <strong className="text-sm text-white">
             Orbit<span className="text-indigo-300">ra</span>
           </strong>
-          <span className="text-slate-300">· Explore the universe</span>
+          <span className="text-slate-300">· Jelajahi alam semesta</span>
         </div>
         <div className="flex flex-wrap gap-3">
           <Link
             href="/#catalog"
             className="text-slate-200 transition hover:text-white"
           >
-            Catalog
+            Katalog
           </Link>
           <Link
             href="/#about"
             className="text-slate-200 transition hover:text-white"
           >
-            About
+            Tentang
+          </Link>
+          <Link
+            href="/login"
+            className="text-slate-200 transition hover:text-white"
+          >
+            Admin
           </Link>
         </div>
         <p className="m-0 text-slate-400" suppressHydrationWarning>

@@ -40,7 +40,7 @@ export default function ObjectCard({ obj }) {
           href={`/detail?id=${encodeURIComponent(obj.id)}`}
           className="btn-ghost btn-sm mt-1 w-fit"
         >
-          Detail
+          Lihat Detail
         </Link>
       </div>
     </article>

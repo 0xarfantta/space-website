@@ -20,7 +20,7 @@ export default function LoadingScreen() {
       <div className="absolute inset-0 bg-black/40 dark:bg-black/30" />
       <div className="relative flex flex-col items-center gap-4">
         <div className="h-11 w-11 animate-spin rounded-full border-[3px] border-white/25 border-t-indigo-300" />
-        <p className="text-sm text-slate-100">Loading Orbitra…</p>
+        <p className="text-sm text-slate-100">Memuat Orbitra…</p>
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export async function apiGetObjects() {
   const res = await fetch("/api/objects", { cache: "no-store" });
   const data = await parseJson(res);
   if (!res.ok) {
-    throw new Error(data?.error || "Failed to load objects");
+    throw new Error(data?.error || "Gagal memuat objek");
   }
   return data;
 }
@@ -26,7 +26,7 @@ export async function apiGetObject(id) {
   const data = await parseJson(res);
   if (res.status === 404) return null;
   if (!res.ok) {
-    throw new Error(data?.error || "Failed to load object");
+    throw new Error(data?.error || "Gagal memuat objek");
   }
   return data.object;
 }
@@ -39,7 +39,7 @@ export async function apiCreateObject(payload) {
   });
   const data = await parseJson(res);
   if (!res.ok) {
-    throw new Error(data?.error || "Failed to create object");
+    throw new Error(data?.error || "Gagal membuat objek");
   }
   return data.object;
 }
@@ -52,7 +52,7 @@ export async function apiUpdateObject(id, payload) {
   });
   const data = await parseJson(res);
   if (!res.ok) {
-    throw new Error(data?.error || "Failed to update object");
+    throw new Error(data?.error || "Gagal memperbarui objek");
   }
   return data.object;
 }
@@ -63,7 +63,7 @@ export async function apiDeleteObject(id) {
   });
   const data = await parseJson(res);
   if (!res.ok) {
-    throw new Error(data?.error || "Failed to delete object");
+    throw new Error(data?.error || "Gagal menghapus objek");
   }
   return true;
 }
@@ -72,7 +72,7 @@ export async function apiResetObjects() {
   const res = await fetch("/api/objects/reset", { method: "POST" });
   const data = await parseJson(res);
   if (!res.ok) {
-    throw new Error(data?.error || "Failed to reset catalog");
+    throw new Error(data?.error || "Gagal mereset katalog");
   }
   return data;
 }
@@ -91,7 +91,7 @@ export async function apiUploadImage(file) {
   });
   const data = await parseJson(res);
   if (!res.ok) {
-    throw new Error(data?.error || "Failed to upload image");
+    throw new Error(data?.error || "Gagal mengunggah gambar");
   }
   return data.url;
 }

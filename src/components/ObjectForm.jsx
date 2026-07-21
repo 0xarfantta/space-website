@@ -151,11 +151,11 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
 
   function validate() {
     const next = {};
-    if (!form.name.trim()) next.name = "Name is required";
+    if (!form.name.trim()) next.name = "Nama wajib diisi";
     if (!form.scientificName.trim())
-      next.scientificName = "Scientific name is required";
-    if (!form.category) next.category = "Category is required";
-    if (!form.description.trim()) next.description = "Description is required";
+      next.scientificName = "Nama ilmiah wajib diisi";
+    if (!form.category) next.category = "Kategori wajib diisi";
+    if (!form.description.trim()) next.description = "Deskripsi wajib diisi";
 
     // Image only via drive upload — no URL field
     if (mode === "create" && !pendingFile) {
@@ -208,7 +208,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
         router.push("/dashboard");
       }
     } catch (err) {
-      setSubmitError(err.message || "Save failed");
+      setSubmitError(err.message || "Gagal menyimpan");
       setSubmitting(false);
     }
   }
@@ -216,7 +216,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
   if (!ready) {
     return (
       <p className="py-16 text-center text-sm font-medium text-slate-200">
-        Loading form…
+        Memuat formulir…
       </p>
     );
   }
@@ -225,10 +225,10 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
     return (
       <div className="mx-auto max-w-lg px-4 py-10">
         <div className="admin-panel rounded-2xl p-6">
-          <h1 className="admin-title mb-2 text-xl">Object not found</h1>
-          <p className="admin-subtitle mb-4">No object with id: {objectId}</p>
+          <h1 className="admin-title mb-2 text-xl">Objek tidak ditemukan</h1>
+          <p className="admin-subtitle mb-4">Tidak ada objek dengan id: {objectId}</p>
           <Link href="/dashboard" className="btn-primary">
-            Back to Dashboard
+            Kembali ke Dasbor
           </Link>
         </div>
       </div>
@@ -242,17 +242,17 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
       <div className="admin-panel rounded-3xl p-4 sm:p-5 md:p-8">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <h1 className="admin-title text-xl sm:text-2xl">
-            {mode === "edit" ? "Edit Object" : "Add Object"}
+            {mode === "edit" ? "Ubah Objek" : "Tambah Objek"}
           </h1>
           <Link href="/dashboard" className="btn-ghost btn-sm">
-            Cancel
+            Batal
           </Link>
         </div>
 
         <form onSubmit={onSubmit} noValidate>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <label className="admin-label">
-              <span>Name *</span>
+              <span>Nama *</span>
               <input
                 className="admin-input"
                 name="name"
@@ -265,7 +265,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
               )}
             </label>
             <label className="admin-label">
-              <span>Scientific Name *</span>
+              <span>Nama Ilmiah *</span>
               <input
                 className="admin-input"
                 name="scientificName"
@@ -280,7 +280,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
               )}
             </label>
             <label className="admin-label">
-              <span>Category *</span>
+              <span>Kategori *</span>
               <select
                 className="admin-input"
                 name="category"
@@ -296,7 +296,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
               </select>
             </label>
             <label className="admin-label">
-              <span>Year Discovered</span>
+              <span>Tahun Ditemukan</span>
               <input
                 className="admin-input"
                 name="yearDiscovered"
@@ -316,7 +316,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
               />
             </label>
             <label className="admin-label">
-              <span>Mass</span>
+              <span>Massa</span>
               <input
                 className="admin-input"
                 name="mass"
@@ -326,7 +326,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
               />
             </label>
             <label className="admin-label">
-              <span>Gravity</span>
+              <span>Gravitasi</span>
               <input
                 className="admin-input"
                 name="gravity"
@@ -336,7 +336,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
               />
             </label>
             <label className="admin-label">
-              <span>Temperature</span>
+              <span>Suhu</span>
               <input
                 className="admin-input"
                 name="temperature"
@@ -346,7 +346,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
               />
             </label>
             <label className="admin-label md:col-span-2">
-              <span>Distance</span>
+              <span>Jarak</span>
               <input
                 className="admin-input"
                 name="distance"
@@ -430,7 +430,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                   className="btn-primary btn-sm pointer-events-none"
                   tabIndex={-1}
                 >
-                  {pendingFile ? "Change photo" : "Upload from drive"}
+                  {pendingFile ? "Ganti foto" : "Unggah dari drive"}
                 </button>
 
                 {fileName && (
@@ -478,7 +478,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
 
               <div className="overflow-hidden rounded-2xl border border-white/20 bg-black/50">
                 <p className="border-b border-white/10 px-3 py-2 text-xs font-medium uppercase tracking-wide text-slate-400">
-                  Preview
+                  Pratinjau
                 </p>
                 <div className="aspect-video max-h-56">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -495,7 +495,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
               </div>
             </div>
             <label className="admin-label md:col-span-2">
-              <span>Description *</span>
+              <span>Deskripsi *</span>
               <textarea
                 className="admin-input min-h-[120px] resize-y"
                 name="description"
@@ -520,16 +520,16 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
 
           <div className="mt-6 flex flex-wrap justify-end gap-3">
             <Link href="/dashboard" className="btn-ghost">
-              Cancel
+              Batal
             </Link>
             <button type="submit" className="btn-primary" disabled={submitting}>
               {submitting
                 ? pendingFile
-                  ? "Uploading & saving…"
-                  : "Saving…"
+                  ? "Mengunggah & menyimpan…"
+                  : "Menyimpan…"
                 : mode === "edit"
-                  ? "Save Changes"
-                  : "Save Object"}
+                  ? "Simpan Perubahan"
+                  : "Simpan Objek"}
             </button>
           </div>
         </form>

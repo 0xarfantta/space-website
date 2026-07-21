@@ -16,7 +16,7 @@ export async function GET() {
   } catch (err) {
     console.error("[GET /api/objects]", err);
     return NextResponse.json(
-      { error: "Failed to load objects." },
+      { error: "Gagal memuat objek." },
       { status: 500 }
     );
   }
@@ -25,14 +25,14 @@ export async function GET() {
 export async function POST(request) {
   const auth = await requireAdmin();
   if (!auth.ok) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Tidak diizinkan" }, { status: 401 });
   }
 
   let body;
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+    return NextResponse.json({ error: "Body JSON tidak valid." }, { status: 400 });
   }
 
   const name = String(body?.name || "").trim();
@@ -44,7 +44,7 @@ export async function POST(request) {
     return NextResponse.json(
       {
         error:
-          "name, scientificName, category, and description are required.",
+          "Nama, nama ilmiah, kategori, dan deskripsi wajib diisi.",
       },
       { status: 400 }
     );
@@ -68,7 +68,7 @@ export async function POST(request) {
   } catch (err) {
     console.error("[POST /api/objects]", err);
     return NextResponse.json(
-      { error: "Failed to create object." },
+      { error: "Gagal membuat objek." },
       { status: 500 }
     );
   }

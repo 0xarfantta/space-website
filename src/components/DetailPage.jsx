@@ -46,19 +46,19 @@ export default function DetailPage() {
       <Navbar />
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
         {!ready && (
-          <p className="py-16 text-center text-sm text-slate-300">Loading…</p>
+          <p className="py-16 text-center text-sm text-slate-300">Memuat…</p>
         )}
 
         {ready && !id && (
           <div className="detail-content-panel max-w-lg rounded-2xl p-6">
             <h1 className="mb-2 text-xl font-semibold text-white">
-              No object selected
+              Tidak ada objek dipilih
             </h1>
             <p className="mb-4 text-sm text-slate-200">
-              Open a detail page with ?id=…
+              Buka halaman detail dengan parameter ?id=…
             </p>
             <Link href="/" className="btn-primary">
-              Back Home
+              Kembali ke Beranda
             </Link>
           </div>
         )}
@@ -66,11 +66,13 @@ export default function DetailPage() {
         {ready && id && !obj && (
           <div className="detail-content-panel max-w-lg rounded-2xl p-6">
             <h1 className="mb-2 text-xl font-semibold text-white">
-              Object not found
+              Objek tidak ditemukan
             </h1>
-            <p className="mb-4 text-sm text-slate-200">No object with id: {id}</p>
+            <p className="mb-4 text-sm text-slate-200">
+              Tidak ada objek dengan id: {id}
+            </p>
             <Link href="/" className="btn-primary">
-              Back Home
+              Kembali ke Beranda
             </Link>
           </div>
         )}
@@ -90,7 +92,7 @@ export default function DetailPage() {
                 href="/#catalog"
                 className="inline-flex text-sm font-medium text-indigo-200 transition hover:text-white"
               >
-                ← Back to catalog
+                ← Kembali ke katalog
               </Link>
 
               <p className="mt-4 text-xs font-semibold uppercase tracking-[0.12em] text-indigo-300">
@@ -106,11 +108,11 @@ export default function DetailPage() {
               <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {[
                   ["Diameter", obj.diameter],
-                  ["Mass", obj.mass],
-                  ["Gravity", obj.gravity],
-                  ["Temperature", obj.temperature],
-                  ["Distance", obj.distance],
-                  ["Year discovered", obj.yearDiscovered],
+                  ["Massa", obj.mass],
+                  ["Gravitasi", obj.gravity],
+                  ["Suhu", obj.temperature],
+                  ["Jarak", obj.distance],
+                  ["Tahun ditemukan", obj.yearDiscovered],
                 ].map(([label, value], i) => (
                   <div
                     key={label}
@@ -129,7 +131,7 @@ export default function DetailPage() {
 
               <div className="mt-6 rounded-xl border border-white/15 bg-black/30 p-4 backdrop-blur-md">
                 <p className="mb-2 text-[0.7rem] font-semibold uppercase tracking-wide text-indigo-200/90">
-                  Description
+                  Deskripsi
                 </p>
                 <p className="text-[0.95rem] leading-relaxed text-slate-50">
                   {obj.description}
@@ -138,7 +140,7 @@ export default function DetailPage() {
 
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link href="/#catalog" className="btn-ghost">
-                  Back to Catalog
+                  Kembali ke Katalog
                 </Link>
                 {authReady && isAdmin && (
                   <>
@@ -146,10 +148,10 @@ export default function DetailPage() {
                       href={`/edit-object?id=${encodeURIComponent(obj.id)}`}
                       className="btn-primary"
                     >
-                      Edit Object
+                      Ubah Objek
                     </Link>
                     <Link href="/dashboard" className="btn-ghost">
-                      Dashboard
+                      Dasbor
                     </Link>
                   </>
                 )}

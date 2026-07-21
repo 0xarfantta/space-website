@@ -102,7 +102,7 @@ export default function DetailImage({ src, alt, category }) {
 
       {/* Caption pulse under image */}
       <p className="detail-image-caption mt-3 text-center text-xs text-slate-400">
-        Hover to explore · {alt}
+        Arahkan kursor untuk menjelajah · {alt}
       </p>
     </div>
   );

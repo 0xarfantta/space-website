@@ -19,7 +19,7 @@ export const ALLOWED_IMAGE_TYPES = {
  */
 export async function saveUploadedImage(file) {
   if (!file || typeof file === "string" || typeof file.arrayBuffer !== "function") {
-    return { ok: false, error: "No image file provided.", status: 400 };
+    return { ok: false, error: "File gambar tidak ditemukan.", status: 400 };
   }
 
   const mime = String(file.type || "").toLowerCase();
@@ -27,19 +27,19 @@ export async function saveUploadedImage(file) {
   if (!ext) {
     return {
       ok: false,
-      error: "Only JPEG, PNG, WebP, or GIF images are allowed.",
+      error: "Hanya gambar JPEG, PNG, WebP, atau GIF yang diizinkan.",
       status: 400,
     };
   }
 
   const size = typeof file.size === "number" ? file.size : 0;
   if (size <= 0) {
-    return { ok: false, error: "Empty file.", status: 400 };
+    return { ok: false, error: "File kosong.", status: 400 };
   }
   if (size > MAX_UPLOAD_BYTES) {
     return {
       ok: false,
-      error: `Image too large (max ${MAX_UPLOAD_BYTES / (1024 * 1024)} MB).`,
+      error: `Gambar terlalu besar (maks ${MAX_UPLOAD_BYTES / (1024 * 1024)} MB).`,
       status: 400,
     };
   }
@@ -48,7 +48,7 @@ export async function saveUploadedImage(file) {
   if (buffer.length > MAX_UPLOAD_BYTES) {
     return {
       ok: false,
-      error: `Image too large (max ${MAX_UPLOAD_BYTES / (1024 * 1024)} MB).`,
+      error: `Gambar terlalu besar (maks ${MAX_UPLOAD_BYTES / (1024 * 1024)} MB).`,
       status: 400,
     };
   }

@@ -2,8 +2,8 @@ import AdminGuard from "@/components/AdminGuard";
 import DashboardPage from "@/components/DashboardPage";
 
 export const metadata = {
-  title: "Admin Dashboard — Orbitra",
-  description: "Admin-only management of celestial objects.",
+  title: "Dasbor Admin — Orbitra",
+  description: "Pengelolaan objek luar angkasa khusus admin.",
 };
 
 export default function Page() {

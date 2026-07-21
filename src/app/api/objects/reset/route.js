@@ -5,7 +5,7 @@ import { getStats, resetToSeed } from "@/lib/objects-server";
 export async function POST() {
   const auth = await requireAdmin();
   if (!auth.ok) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Tidak diizinkan" }, { status: 401 });
   }
 
   try {
@@ -18,7 +18,7 @@ export async function POST() {
   } catch (err) {
     console.error("[POST /api/objects/reset]", err);
     return NextResponse.json(
-      { error: "Failed to reset catalog." },
+      { error: "Gagal mereset katalog." },
       { status: 500 }
     );
   }

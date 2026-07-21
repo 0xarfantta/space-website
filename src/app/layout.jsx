@@ -19,11 +19,11 @@ const siteUrl =
 export const metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Orbitra — Explore The Universe",
+    default: "Orbitra — Jelajahi Alam Semesta",
     template: "%s · Orbitra",
   },
   description:
-    "Orbitra is a modern celestial objects catalog. Explore planets, galaxies, nebulae, and more.",
+    "Orbitra adalah katalog modern objek luar angkasa. Jelajahi planet, galaksi, nebula, dan lainnya.",
 };
 
 export const viewport = {
@@ -37,7 +37,7 @@ export default function RootLayout({ children }) {
   return (
     // suppressHydrationWarning: browser extensions often inject attributes on
     // <html>/<body> (e.g. __processed_*) before React hydrates.
-    <html lang="en" className={`${poppins.variable} dark`} suppressHydrationWarning>
+    <html lang="id" className={`${poppins.variable} dark`} suppressHydrationWarning>
       <body className="font-sans text-slate-50" suppressHydrationWarning>
         <BgScene />
         <LoadingScreen />

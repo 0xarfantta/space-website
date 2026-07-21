@@ -44,8 +44,8 @@ export default function LoginPage() {
 
   function validate() {
     const next = {};
-    if (!username.trim()) next.username = "Username wajib diisi.";
-    if (!password) next.password = "Password wajib diisi.";
+    if (!username.trim()) next.username = "Nama pengguna wajib diisi.";
+    if (!password) next.password = "Kata sandi wajib diisi.";
     setFieldErrors(next);
     return Object.keys(next).length === 0;
   }
@@ -77,7 +77,7 @@ export default function LoginPage() {
         <Navbar />
         <main className="flex flex-1 items-center justify-center px-4 py-16">
           <p className="glass rounded-xl px-4 py-3 text-sm font-medium text-white">
-            Redirecting to dashboard…
+            Mengalihkan ke dasbor…
           </p>
         </main>
       </div>
@@ -90,7 +90,7 @@ export default function LoginPage() {
         <Navbar />
         <main className="flex flex-1 items-center justify-center px-4 py-16">
           <p className="glass rounded-xl px-4 py-3 text-sm font-medium text-white">
-            Loading…
+            Memuat…
           </p>
         </main>
       </div>
@@ -121,13 +121,15 @@ export default function LoginPage() {
                   🪐
                 </span>
                 <div>
-                  <p className="section-eyebrow mb-0">Admin only</p>
-                  <h1 className="admin-title text-xl sm:text-2xl">Admin Login</h1>
+                  <p className="section-eyebrow mb-0">Khusus admin</p>
+                  <h1 className="admin-title text-xl sm:text-2xl">
+                    Login Admin
+                  </h1>
                 </div>
               </div>
 
               <p className="admin-subtitle">
-                Kelola katalog objek luar angkasa — tambah, edit, dan hapus.
+                Kelola katalog objek luar angkasa — tambah, ubah, dan hapus.
                 Pengunjung bisa menjelajah tanpa login.
               </p>
 
@@ -138,7 +140,7 @@ export default function LoginPage() {
                 aria-describedby={error ? errorId : undefined}
               >
                 <label className="admin-label" htmlFor={usernameId}>
-                  <span>Username</span>
+                  <span>Nama pengguna</span>
                   <input
                     id={usernameId}
                     className={`admin-input ${
@@ -178,7 +180,7 @@ export default function LoginPage() {
                 </label>
 
                 <label className="admin-label" htmlFor={passwordId}>
-                  <span>Password</span>
+                  <span>Kata sandi</span>
                   <div className="relative">
                     <input
                       id={passwordId}
@@ -244,14 +246,14 @@ export default function LoginPage() {
                     className="btn-ghost w-full xs:w-auto"
                     tabIndex={submitting ? -1 : 0}
                   >
-                    Back to Home
+                    Kembali ke Beranda
                   </Link>
                   <button
                     type="submit"
                     className="btn-primary min-w-[7.5rem] w-full xs:w-auto"
                     disabled={submitting}
                   >
-                    {submitting ? "Signing in…" : "Sign in"}
+                    {submitting ? "Masuk…" : "Masuk"}
                   </button>
                 </div>
               </form>

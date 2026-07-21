@@ -57,7 +57,7 @@ export async function getSessionFromCookies() {
 export async function requireAdmin() {
   const session = await getSessionFromCookies();
   if (!session) {
-    return { ok: false, session: null, error: "Unauthorized" };
+    return { ok: false, session: null, error: "Tidak diizinkan" };
   }
   return { ok: true, session, error: null };
 }

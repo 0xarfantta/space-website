@@ -21,7 +21,7 @@ export default function BackToTop() {
         right: "max(1rem, env(safe-area-inset-right))",
         bottom: "max(1rem, env(safe-area-inset-bottom))",
       }}
-      aria-label="Back to top"
+      aria-label="Kembali ke atas"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
     >
       ↑

@@ -21,7 +21,7 @@ export default function AdminGuard({ children }) {
     return (
       <div className="flex min-h-screen items-center justify-center px-4">
         <p className="glass rounded-xl px-4 py-3 text-sm font-medium text-white">
-          {!ready ? "Checking access…" : "Redirecting to admin login…"}
+          {!ready ? "Memeriksa akses…" : "Mengalihkan ke login admin…"}
         </p>
       </div>
     );

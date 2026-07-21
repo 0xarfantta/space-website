@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 export async function POST(request) {
   const auth = await requireAdmin();
   if (!auth.ok) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Tidak diizinkan" }, { status: 401 });
   }
 
   let formData;
@@ -15,7 +15,7 @@ export async function POST(request) {
     formData = await request.formData();
   } catch {
     return NextResponse.json(
-      { error: "Invalid multipart form data." },
+      { error: "Data form multipart tidak valid." },
       { status: 400 }
     );
   }

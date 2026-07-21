@@ -11,13 +11,13 @@ export async function GET(_request, { params }) {
     const { id } = await params;
     const object = await getObjectById(id);
     if (!object) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return NextResponse.json({ error: "Tidak ditemukan" }, { status: 404 });
     }
     return NextResponse.json({ object });
   } catch (err) {
     console.error("[GET /api/objects/:id]", err);
     return NextResponse.json(
-      { error: "Failed to load object." },
+      { error: "Gagal memuat objek." },
       { status: 500 }
     );
   }
@@ -26,7 +26,7 @@ export async function GET(_request, { params }) {
 export async function PUT(request, { params }) {
   const auth = await requireAdmin();
   if (!auth.ok) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Tidak diizinkan" }, { status: 401 });
   }
 
   const { id } = await params;
@@ -35,7 +35,7 @@ export async function PUT(request, { params }) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+    return NextResponse.json({ error: "Body JSON tidak valid." }, { status: 400 });
   }
 
   const name = String(body?.name || "").trim();
@@ -46,8 +46,7 @@ export async function PUT(request, { params }) {
   if (!name || !scientificName || !category || !description) {
     return NextResponse.json(
       {
-        error:
-          "name, scientificName, category, and description are required.",
+        error: "Nama, nama ilmiah, kategori, dan deskripsi wajib diisi.",
       },
       { status: 400 }
     );
@@ -68,13 +67,13 @@ export async function PUT(request, { params }) {
       description,
     });
     if (!object) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return NextResponse.json({ error: "Tidak ditemukan" }, { status: 404 });
     }
     return NextResponse.json({ object });
   } catch (err) {
     console.error("[PUT /api/objects/:id]", err);
     return NextResponse.json(
-      { error: "Failed to update object." },
+      { error: "Gagal memperbarui objek." },
       { status: 500 }
     );
   }
@@ -83,20 +82,20 @@ export async function PUT(request, { params }) {
 export async function DELETE(_request, { params }) {
   const auth = await requireAdmin();
   if (!auth.ok) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "Tidak diizinkan" }, { status: 401 });
   }
 
   try {
     const { id } = await params;
     const ok = await deleteObject(id);
     if (!ok) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return NextResponse.json({ error: "Tidak ditemukan" }, { status: 404 });
     }
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[DELETE /api/objects/:id]", err);
     return NextResponse.json(
-      { error: "Failed to delete object." },
+      { error: "Gagal menghapus objek." },
       { status: 500 }
     );
   }

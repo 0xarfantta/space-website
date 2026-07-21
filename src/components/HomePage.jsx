@@ -45,22 +45,21 @@ export default function HomePage() {
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1">
-        {/* Hero */}
         <section className="flex min-h-[min(100dvh,900px)] items-center px-4 py-12 sm:py-16 md:min-h-[calc(100vh-72px)] md:py-20">
           <div className="mx-auto max-w-3xl animate-fade-up text-center">
             <h1 className="mb-4 bg-title-gradient bg-clip-text text-3xl font-bold tracking-tight text-transparent xs:text-4xl md:text-6xl">
-              Explore The Universe
+              Jelajahi Alam Semesta
             </h1>
             <p className="mx-auto mb-8 max-w-xl text-sm text-slate-200/95 sm:text-base md:text-lg">
-              Discover planets, galaxies, nebulae, stars, black holes, and many other
-              fascinating celestial objects.
+              Temukan planet, galaksi, nebula, bintang, lubang hitam, dan berbagai
+              objek luar angkasa menarik lainnya.
             </p>
             <div className="mb-8 flex w-full max-w-md flex-col justify-center gap-3 xs:mx-auto xs:max-w-none xs:flex-row xs:flex-wrap sm:mb-10">
               <a href="#catalog" className="btn-primary btn-lg w-full xs:w-auto">
-                Explore Now
+                Mulai Jelajah
               </a>
               <a href="#about" className="btn-ghost btn-lg w-full xs:w-auto">
-                About Orbitra
+                Tentang Orbitra
               </a>
             </div>
             <div className="glass inline-flex gap-6 rounded-2xl px-6 py-4 sm:gap-8 sm:px-8">
@@ -69,7 +68,7 @@ export default function HomePage() {
                   {ready ? stats.totalObjects : "—"}
                 </strong>
                 <span className="text-[10px] uppercase tracking-wide text-slate-400 sm:text-xs">
-                  Objects
+                  Objek
                 </span>
               </div>
               <div className="flex min-w-[3.5rem] flex-col sm:min-w-[4rem]">
@@ -77,23 +76,22 @@ export default function HomePage() {
                   {ready ? stats.totalCategories : "—"}
                 </strong>
                 <span className="text-[10px] uppercase tracking-wide text-slate-400 sm:text-xs">
-                  Categories
+                  Kategori
                 </span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Featured */}
         <section className="scroll-mt-20 px-4 py-12 sm:py-16" id="featured">
           <div className="mx-auto max-w-6xl">
             <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
               <div>
-                <p className="section-eyebrow">Highlights</p>
-                <h2 className="section-title">Featured Objects</h2>
+                <p className="section-eyebrow">Sorotan</p>
+                <h2 className="section-title">Objek Unggulan</h2>
               </div>
               <a href="#catalog" className="text-sm text-slate-300 hover:text-indigo-200">
-                View all →
+                Lihat semua →
               </a>
             </div>
             <div className="grid grid-cols-1 gap-4 xs:grid-cols-2 sm:gap-5 lg:grid-cols-4">
@@ -104,12 +102,11 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Categories */}
         <section className="scroll-mt-20 px-4 py-10" id="categories">
           <div className="mx-auto max-w-6xl">
             <div className="mb-6 sm:mb-8">
-              <p className="section-eyebrow">Browse by type</p>
-              <h2 className="section-title">Categories</h2>
+              <p className="section-eyebrow">Jelajahi menurut jenis</p>
+              <h2 className="section-title">Kategori</h2>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-4">
               {CATEGORIES.map((cat) => (
@@ -134,12 +131,11 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Catalog */}
         <section className="scroll-mt-20 px-4 py-12 sm:py-16" id="catalog">
           <div className="mx-auto max-w-6xl">
             <div className="mb-6 sm:mb-8">
-              <p className="section-eyebrow">Full catalog</p>
-              <h2 className="section-title">Latest Objects</h2>
+              <p className="section-eyebrow">Katalog lengkap</p>
+              <h2 className="section-title">Objek Terbaru</h2>
             </div>
 
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -150,7 +146,7 @@ export default function HomePage() {
                 <input
                   type="search"
                   className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-400"
-                  placeholder="Search objects…"
+                  placeholder="Cari objek…"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   autoComplete="off"
@@ -158,12 +154,12 @@ export default function HomePage() {
               </div>
               <select
                 className="glass min-h-[44px] w-full rounded-full px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-400/50 sm:w-auto"
-                aria-label="Filter by category"
+                aria-label="Filter berdasarkan kategori"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
               >
                 <option value="" className="bg-slate-900 text-white">
-                  All categories
+                  Semua kategori
                 </option>
                 {CATEGORIES.map((c) => (
                   <option key={c} value={c} className="bg-slate-900 text-white">
@@ -180,51 +176,62 @@ export default function HomePage() {
             </div>
             {catalog.length === 0 && (
               <p className="py-16 text-center text-sm text-slate-500 dark:text-slate-400">
-                No objects found.
+                Objek tidak ditemukan.
               </p>
             )}
           </div>
         </section>
 
-        {/* About */}
         <section className="scroll-mt-20 px-4 py-12 sm:py-16" id="about">
           <div className="surface mx-auto max-w-4xl rounded-3xl p-6 text-center sm:p-8 md:p-12">
-            <p className="section-eyebrow">About Orbitra</p>
-            <h2 className="section-title mb-4 text-white drop-shadow-sm">A Modern Space Catalog</h2>
+            <p className="section-eyebrow">Tentang Orbitra</p>
+            <h2 className="section-title mb-4 text-white drop-shadow-sm">
+              Katalog Luar Angkasa Modern
+            </h2>
             <p className="mx-auto max-w-2xl text-base font-normal leading-relaxed text-slate-100 md:text-lg">
-              Orbitra is an interactive database designed for space enthusiasts, educators, and curious minds. 
-              Our mission is to make the mysteries of the cosmos accessible to everyone. Browse through our extensive 
-              collection of celestial bodies and discover detailed scientific measurements without any registration.
+              Orbitra adalah database interaktif untuk pecinta ruang angkasa, pendidik,
+              dan siapa saja yang penasaran. Misi kami membuat misteri kosmos mudah
+              diakses. Telusuri koleksi benda langit dan temukan data ilmiah detail
+              tanpa perlu mendaftar.
             </p>
-            
+
             <div className="mt-10 grid grid-cols-1 gap-6 text-left sm:grid-cols-3">
               <div className="surface-soft rounded-2xl p-5 transition hover:border-white/30 hover:bg-white/[0.12]">
-                <h3 className="text-base font-semibold text-white drop-shadow-sm">Explore & Search</h3>
+                <h3 className="text-base font-semibold text-white drop-shadow-sm">
+                  Jelajah & Cari
+                </h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-200">
-                  Find specific planets, stars, galaxies, or nebulae instantly with our live search and responsive category filters.
+                  Temukan planet, bintang, galaksi, atau nebula dengan pencarian
+                  langsung dan filter kategori yang responsif.
                 </p>
               </div>
               <div className="surface-soft rounded-2xl p-5 transition hover:border-white/30 hover:bg-white/[0.12]">
-                <h3 className="text-base font-semibold text-white drop-shadow-sm">Detailed Metadata</h3>
+                <h3 className="text-base font-semibold text-white drop-shadow-sm">
+                  Data Detail
+                </h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-200">
-                  Access rich physical data including mass, diameter, gravity, average temperatures, and distances from Earth.
+                  Akses data fisik seperti massa, diameter, gravitasi, suhu rata-rata,
+                  dan jarak dari Bumi.
                 </p>
               </div>
               <div className="surface-soft rounded-2xl p-5 transition hover:border-white/30 hover:bg-white/[0.12]">
-                <h3 className="text-base font-semibold text-white drop-shadow-sm">Manage Catalog</h3>
+                <h3 className="text-base font-semibold text-white drop-shadow-sm">
+                  Kelola Katalog
+                </h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-200">
-                  Admin users can easily add, edit, or delete objects directly from the secure control panel to keep the catalog fresh.
+                  Admin dapat menambah, mengedit, atau menghapus objek dari panel
+                  kontrol agar katalog tetap mutakhir.
                 </p>
               </div>
             </div>
 
             <div className="mt-8 flex flex-wrap justify-center gap-2">
               {[
-                "Celestial Catalog",
-                "Real-time Search",
-                "Physical Properties",
-                "Mobile Friendly",
-                "Admin Control Panel",
+                "Katalog Benda Langit",
+                "Pencarian Langsung",
+                "Properti Fisik",
+                "Ramah Seluler",
+                "Panel Admin",
               ].map((t) => (
                 <span
                   key={t}
