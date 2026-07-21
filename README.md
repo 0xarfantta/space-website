@@ -46,6 +46,7 @@ Ubah di file `.env` (`ADMIN_USERNAME`, `ADMIN_PASSWORD`, `AUTH_SECRET`).
 | PUT | `/api/objects/:id` | Admin |
 | DELETE | `/api/objects/:id` | Admin |
 | POST | `/api/objects/reset` | Admin |
+| POST | `/api/upload` | Admin (upload gambar dari drive → `/uploads/…`) |
 | POST | `/api/auth/login` | Publik |
 | POST | `/api/auth/logout` | Publik |
 | GET | `/api/auth/session` | Publik |

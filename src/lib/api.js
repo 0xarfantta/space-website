@@ -77,6 +77,25 @@ export async function apiResetObjects() {
   return data;
 }
 
+/**
+ * Upload gambar dari drive lokal (admin).
+ * @param {File} file
+ * @returns {Promise<string>} path publik mis. /uploads/uuid.jpg
+ */
+export async function apiUploadImage(file) {
+  const body = new FormData();
+  body.append("file", file);
+  const res = await fetch("/api/upload", {
+    method: "POST",
+    body,
+  });
+  const data = await parseJson(res);
+  if (!res.ok) {
+    throw new Error(data?.error || "Gagal mengunggah gambar");
+  }
+  return data.url;
+}
+
 export async function apiLogin(username, password) {
   const res = await fetch("/api/auth/login", {
     method: "POST",

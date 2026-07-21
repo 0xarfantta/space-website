@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CATEGORIES, PLACEHOLDER_IMAGE } from "@/lib/data";
@@ -8,6 +8,7 @@ import {
   apiCreateObject,
   apiGetObject,
   apiUpdateObject,
+  apiUploadImage,
 } from "@/lib/api";
 
 const EMPTY = {
@@ -24,14 +25,26 @@ const EMPTY = {
   description: "",
 };
 
+const ACCEPT_IMAGES = "image/jpeg,image/png,image/webp,image/gif";
+const MAX_MB = 5;
+
 export default function ObjectForm({ mode = "create", objectId = null }) {
   const router = useRouter();
+  const fileInputRef = useRef(null);
+  const localPreviewRef = useRef(null);
+
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [ready, setReady] = useState(mode === "create");
   const [missing, setMissing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+
+  /** File dari drive; di-upload saat simpan */
+  const [pendingFile, setPendingFile] = useState(null);
+  const [localPreview, setLocalPreview] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [fileError, setFileError] = useState("");
 
   useEffect(() => {
     if (mode !== "edit" || !objectId) {
@@ -76,6 +89,66 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
     };
   }, [mode, objectId]);
 
+  useEffect(() => {
+    return () => {
+      if (localPreviewRef.current) {
+        URL.revokeObjectURL(localPreviewRef.current);
+        localPreviewRef.current = null;
+      }
+    };
+  }, []);
+
+  function clearPendingFile({ keepError = false } = {}) {
+    if (localPreviewRef.current) {
+      URL.revokeObjectURL(localPreviewRef.current);
+      localPreviewRef.current = null;
+    }
+    setPendingFile(null);
+    setLocalPreview("");
+    setFileName("");
+    if (!keepError) setFileError("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
+
+  function onFileChange(e) {
+    const file = e.target.files?.[0];
+    setFileError("");
+    setErrors((prev) => {
+      const next = { ...prev };
+      delete next.image;
+      return next;
+    });
+
+    if (!file) {
+      clearPendingFile();
+      return;
+    }
+
+    const allowed = ACCEPT_IMAGES.split(",");
+    if (!allowed.includes(file.type)) {
+      clearPendingFile({ keepError: true });
+      setFileError("Gunakan file JPEG, PNG, WebP, atau GIF.");
+      return;
+    }
+
+    if (file.size > MAX_MB * 1024 * 1024) {
+      clearPendingFile({ keepError: true });
+      setFileError(`Ukuran maksimal ${MAX_MB} MB.`);
+      return;
+    }
+
+    if (localPreviewRef.current) {
+      URL.revokeObjectURL(localPreviewRef.current);
+    }
+    const url = URL.createObjectURL(file);
+    localPreviewRef.current = url;
+    setPendingFile(file);
+    setLocalPreview(url);
+    setFileName(file.name);
+  }
+
   function onChange(e) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -88,7 +161,17 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
       next.scientificName = "Nama ilmiah wajib diisi";
     if (!form.category) next.category = "Kategori wajib diisi";
     if (!form.description.trim()) next.description = "Deskripsi wajib diisi";
+
+    // Hanya upload dari drive — tanpa URL
+    if (mode === "create" && !pendingFile) {
+      next.image = "Silakan pilih gambar dari drive / folder.";
+    }
+    if (mode === "edit" && !pendingFile && !form.imageUrl) {
+      next.image = "Silakan pilih gambar dari drive / folder.";
+    }
+
     setErrors(next);
+    if (next.image) setFileError(next.image);
     return Object.keys(next).length === 0;
   }
 
@@ -98,8 +181,16 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
 
     setSubmitting(true);
     setSubmitError("");
+    setFileError("");
 
     try {
+      // Edit: pertahankan gambar lama kecuali ada file baru
+      let imageUrl = form.imageUrl || "";
+
+      if (pendingFile) {
+        imageUrl = await apiUploadImage(pendingFile);
+      }
+
       const payload = {
         name: form.name.trim(),
         scientificName: form.scientificName.trim(),
@@ -110,7 +201,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
         temperature: form.temperature.trim(),
         distance: form.distance.trim(),
         yearDiscovered: form.yearDiscovered.trim(),
-        imageUrl: form.imageUrl.trim(),
+        imageUrl,
         description: form.description.trim(),
       };
 
@@ -151,7 +242,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
     );
   }
 
-  const preview = form.imageUrl || PLACEHOLDER_IMAGE;
+  const preview = localPreview || form.imageUrl || PLACEHOLDER_IMAGE;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
@@ -272,18 +363,123 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
               />
             </label>
 
+            {/* Upload dari drive / folder pribadi */}
             <div className="md:col-span-2 space-y-3">
-              <label className="admin-label">
-                <span>URL gambar</span>
-                <input
-                  className="admin-input"
-                  name="imageUrl"
-                  value={form.imageUrl}
-                  onChange={onChange}
-                  placeholder="https://…"
+              <p className="text-sm font-medium text-slate-100">
+                Gambar objek *{" "}
+                <span className="font-normal text-slate-400">
+                  (pilih dari drive / folder — bukan URL)
+                </span>
+              </p>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={ACCEPT_IMAGES}
+                className="hidden"
+                onChange={onFileChange}
+                disabled={submitting}
+                aria-hidden="true"
+                tabIndex={-1}
+              />
+
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => {
+                  if (!submitting) fileInputRef.current?.click();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    if (!submitting) fileInputRef.current?.click();
+                  }
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (submitting) return;
+                  const file = e.dataTransfer?.files?.[0];
+                  if (!file || !fileInputRef.current) return;
+                  const dt = new DataTransfer();
+                  dt.items.add(file);
+                  fileInputRef.current.files = dt.files;
+                  onFileChange({ target: fileInputRef.current });
+                }}
+                className={`flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed px-4 py-8 text-center transition ${
+                  pendingFile
+                    ? "border-indigo-400/60 bg-indigo-500/15"
+                    : "border-white/30 bg-black/40 hover:border-indigo-400/50 hover:bg-white/5"
+                } ${submitting ? "pointer-events-none opacity-60" : ""}`}
+              >
+                <span className="text-3xl" aria-hidden="true">
+                  📁
+                </span>
+                <div>
+                  <p className="text-base font-semibold text-white">
+                    {pendingFile
+                      ? "Ganti foto dari drive"
+                      : "Pilih foto dari drive / folder"}
+                  </p>
+                  <p className="mt-1 text-xs text-slate-300">
+                    Klik area ini atau seret & lepas gambar · JPEG, PNG, WebP,
+                    GIF · max {MAX_MB} MB
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="btn-primary btn-sm pointer-events-none"
+                  tabIndex={-1}
+                >
+                  {pendingFile ? "Ganti foto" : "Pilih dari drive"}
+                </button>
+
+                {fileName && (
+                  <p className="max-w-full truncate text-xs text-indigo-200">
+                    File: {fileName}
+                  </p>
+                )}
+                {!fileName && form.imageUrl && mode === "edit" && (
+                  <p className="text-xs text-slate-400">
+                    Gambar saat ini tetap dipakai kecuali Anda pilih file baru.
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  className="btn-primary"
                   disabled={submitting}
-                />
-              </label>
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  📷 Upload foto dari drive
+                </button>
+                {pendingFile && (
+                  <button
+                    type="button"
+                    className="btn-danger btn-sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearPendingFile();
+                    }}
+                    disabled={submitting}
+                  >
+                    Hapus file terpilih
+                  </button>
+                )}
+              </div>
+
+              {(fileError || errors.image) && (
+                <p className="rounded-xl border border-red-400/40 bg-red-500/20 px-3 py-2 text-sm text-red-100">
+                  {fileError || errors.image}
+                </p>
+              )}
 
               <div className="overflow-hidden rounded-2xl border border-white/20 bg-black/50">
                 <p className="border-b border-white/10 px-3 py-2 text-xs font-medium uppercase tracking-wide text-slate-400">
@@ -334,7 +530,9 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
             </Link>
             <button type="submit" className="btn-primary" disabled={submitting}>
               {submitting
-                ? "Menyimpan…"
+                ? pendingFile
+                  ? "Mengunggah & menyimpan…"
+                  : "Menyimpan…"
                 : mode === "edit"
                   ? "Simpan Perubahan"
                   : "Simpan Objek"}
