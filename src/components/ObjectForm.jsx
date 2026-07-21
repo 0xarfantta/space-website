@@ -156,7 +156,17 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
       next.scientificName = "Scientific name is required";
     if (!form.category) next.category = "Category is required";
     if (!form.description.trim()) next.description = "Description is required";
+
+    // Image only via drive upload — no URL field
+    if (mode === "create" && !pendingFile) {
+      next.image = "Silakan upload gambar dari drive.";
+    }
+    if (mode === "edit" && !pendingFile && !form.imageUrl) {
+      next.image = "Silakan upload gambar dari drive.";
+    }
+
     setErrors(next);
+    if (next.image) setFileError(next.image);
     return Object.keys(next).length === 0;
   }
 
@@ -169,7 +179,8 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
     setFileError("");
 
     try {
-      let imageUrl = form.imageUrl.trim();
+      // Keep existing path on edit unless a new file is uploaded
+      let imageUrl = form.imageUrl || "";
 
       if (pendingFile) {
         imageUrl = await apiUploadImage(pendingFile);
@@ -345,11 +356,16 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
               />
             </label>
 
-            {/* Image: upload from drive + optional URL */}
+            {/* Image: upload from local drive only (no URL) */}
             <div className="md:col-span-2 space-y-3">
-              <p className="text-sm font-medium text-slate-100">Image / Foto</p>
+              <p className="text-sm font-medium text-slate-100">
+                Gambar objek *{" "}
+                <span className="font-normal text-slate-400">
+                  (upload dari drive — bukan URL)
+                </span>
+              </p>
 
-              {/* Hidden native picker — opened by the big button */}
+              {/* Hidden native picker — opened by the drop zone / button */}
               <input
                 ref={fileInputRef}
                 type="file"
@@ -422,9 +438,10 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                     File: {fileName}
                   </p>
                 )}
-                {!fileName && form.imageUrl && (
-                  <p className="max-w-full truncate text-xs text-slate-400">
-                    Saat ini: {form.imageUrl}
+                {!fileName && form.imageUrl && mode === "edit" && (
+                  <p className="text-xs text-slate-400">
+                    Gambar saat ini akan tetap dipakai kecuali Anda pilih file
+                    baru.
                   </p>
                 )}
               </div>
@@ -453,9 +470,9 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 )}
               </div>
 
-              {fileError && (
+              {(fileError || errors.image) && (
                 <p className="rounded-xl border border-red-400/40 bg-red-500/20 px-3 py-2 text-sm text-red-100">
-                  {fileError}
+                  {fileError || errors.image}
                 </p>
               )}
 
@@ -476,25 +493,6 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                   />
                 </div>
               </div>
-
-              <label className="admin-label">
-                <span className="text-slate-400">
-                  Image URL (opsional — alternatif jika tidak upload file)
-                </span>
-                <input
-                  className="admin-input"
-                  name="imageUrl"
-                  value={form.imageUrl}
-                  onChange={onChange}
-                  placeholder="https://… atau kosongkan jika upload file"
-                  disabled={submitting || Boolean(pendingFile)}
-                />
-                {pendingFile && (
-                  <span className="text-xs text-slate-500">
-                    File upload akan mengganti URL saat disimpan.
-                  </span>
-                )}
-              </label>
             </div>
             <label className="admin-label md:col-span-2">
               <span>Description *</span>
