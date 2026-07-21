@@ -76,7 +76,7 @@ export default function LoginPage() {
       <div className="flex min-h-screen flex-col">
         <Navbar />
         <main className="flex flex-1 items-center justify-center px-4 py-16">
-          <p className="rounded-xl border border-white/15 bg-slate-950/80 px-4 py-3 text-sm font-medium text-white">
+          <p className="glass rounded-xl px-4 py-3 text-sm font-medium text-white">
             Redirecting to dashboard…
           </p>
         </main>
@@ -89,7 +89,7 @@ export default function LoginPage() {
       <div className="flex min-h-screen flex-col">
         <Navbar />
         <main className="flex flex-1 items-center justify-center px-4 py-16">
-          <p className="rounded-xl border border-white/15 bg-slate-950/80 px-4 py-3 text-sm font-medium text-white">
+          <p className="glass rounded-xl px-4 py-3 text-sm font-medium text-white">
             Loading…
           </p>
         </main>

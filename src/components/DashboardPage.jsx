@@ -222,7 +222,7 @@ export default function DashboardPage() {
             ].map((s) => (
               <article
                 key={s.label}
-                className="admin-panel p-4 transition hover:bg-slate-900/95 sm:p-5"
+                className="admin-panel p-4 transition hover:-translate-y-1.5 hover:border-white/40 hover:bg-white/[0.14] sm:p-5"
               >
                 <p className="admin-faint mb-2 font-semibold uppercase tracking-wide">
                   {s.label}
@@ -339,7 +339,10 @@ export default function DashboardPage() {
             {/* Mobile cards */}
             <div className="space-y-3 md:hidden">
               {filtered.map((obj) => (
-                <div key={obj.id} className="admin-panel-soft p-4">
+                <div
+                  key={obj.id}
+                  className="admin-panel-soft p-4 transition hover:-translate-y-1 hover:border-white/40 hover:bg-white/[0.14]"
+                >
                   <div className="mb-3 flex items-center gap-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
