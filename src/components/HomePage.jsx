@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CATEGORIES } from "@/lib/data";
+import { CATEGORIES, normalizeCategory } from "@/lib/data";
 import { useObjects } from "@/hooks/useObjects";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -24,7 +24,8 @@ export default function HomePage() {
   const categoryCounts = useMemo(() => {
     const counts = {};
     objects.forEach((o) => {
-      counts[o.category] = (counts[o.category] || 0) + 1;
+      const cat = normalizeCategory(o.category);
+      counts[cat] = (counts[cat] || 0) + 1;
     });
     return counts;
   }, [objects]);
@@ -33,9 +34,10 @@ export default function HomePage() {
     const q = query.trim().toLowerCase();
     return [...objects]
       .filter((obj) => {
-        const matchCat = !category || obj.category === category;
+        const objCat = normalizeCategory(obj.category);
+        const matchCat = !category || objCat === category;
         const hay =
-          `${obj.name} ${obj.scientificName} ${obj.category} ${obj.description}`.toLowerCase();
+          `${obj.name} ${obj.scientificName} ${objCat} ${obj.description}`.toLowerCase();
         return matchCat && (!q || hay.includes(q));
       })
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

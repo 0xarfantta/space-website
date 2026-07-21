@@ -1,5 +1,9 @@
 import { prisma } from "@/lib/prisma";
-import { SEED_OBJECTS } from "@/lib/data";
+import {
+  CATEGORY_LEGACY_MAP,
+  normalizeCategory,
+  SEED_OBJECTS,
+} from "@/lib/data";
 
 /** Serialize Prisma row for JSON / frontend */
 export function serializeObject(row) {
@@ -31,7 +35,7 @@ export function serializeObject(row) {
 export function getStats(objects) {
   const categoryCount = {};
   objects.forEach((obj) => {
-    const cat = obj.category || "Unknown";
+    const cat = normalizeCategory(obj.category) || "Unknown";
     categoryCount[cat] = (categoryCount[cat] || 0) + 1;
   });
 
@@ -79,17 +83,34 @@ function seedToCreateInput(item) {
   };
 }
 
-/** If DB empty, insert catalog seed. Safe to call often. */
+/**
+ * Rename English category labels still stored in DB to Indonesian.
+ * Safe to run on every list/get — only touches legacy values.
+ */
+export async function migrateLegacyCategories() {
+  const entries = Object.entries(CATEGORY_LEGACY_MAP);
+  for (const [from, to] of entries) {
+    if (from === to) continue;
+    await prisma.celestialObject.updateMany({
+      where: { category: from },
+      data: { category: to },
+    });
+  }
+}
+
+/** If DB empty, insert catalog seed. Also migrates legacy category names. */
 export async function ensureSeeded() {
   const count = await prisma.celestialObject.count();
-  if (count > 0) return { seeded: false, count };
+  if (count === 0) {
+    await prisma.celestialObject.createMany({
+      data: SEED_OBJECTS.map(seedToCreateInput),
+    });
+    const after = await prisma.celestialObject.count();
+    return { seeded: true, count: after };
+  }
 
-  await prisma.celestialObject.createMany({
-    data: SEED_OBJECTS.map(seedToCreateInput),
-  });
-
-  const after = await prisma.celestialObject.count();
-  return { seeded: true, count: after };
+  await migrateLegacyCategories();
+  return { seeded: false, count };
 }
 
 export async function listObjects() {

@@ -9,10 +9,12 @@ import {
   apiUpdateObject,
 } from "@/lib/api";
 
+import { normalizeCategory } from "@/lib/data";
+
 function computeStats(objects) {
   const categoryCount = {};
   objects.forEach((obj) => {
-    const cat = obj.category || "Unknown";
+    const cat = normalizeCategory(obj.category) || "Unknown";
     categoryCount[cat] = (categoryCount[cat] || 0) + 1;
   });
 

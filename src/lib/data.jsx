@@ -15,6 +15,27 @@ export const CATEGORIES = [
   "Bulan",
 ];
 
+/**
+ * Nama kategori lama (English) → nama baru (Indonesia).
+ * Dipakai agar filter & data DB lama tetap cocok.
+ */
+export const CATEGORY_LEGACY_MAP = {
+  Star: "Bintang",
+  Galaxy: "Galaksi",
+  "Black Hole": "Lubang Hitam",
+  Comet: "Komet",
+  Moon: "Bulan",
+  // Planet, Nebula, Asteroid sama di EN/ID
+};
+
+/** Samakan kategori ke label resmi di CATEGORIES */
+export function normalizeCategory(cat) {
+  if (!cat) return cat;
+  const trimmed = String(cat).trim();
+  if (CATEGORY_LEGACY_MAP[trimmed]) return CATEGORY_LEGACY_MAP[trimmed];
+  return trimmed;
+}
+
 export const PLACEHOLDER_IMAGE =
   "data:image/svg+xml," +
   encodeURIComponent(
