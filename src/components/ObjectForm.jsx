@@ -346,84 +346,155 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
             </label>
 
             {/* Image: upload from drive + optional URL */}
-            <div className="admin-label md:col-span-2 space-y-3">
-              <span>Image</span>
+            <div className="md:col-span-2 space-y-3">
+              <p className="text-sm font-medium text-slate-100">Image / Foto</p>
 
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <label className="btn-ghost btn-sm cursor-pointer">
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept={ACCEPT_IMAGES}
-                    className="sr-only"
-                    onChange={onFileChange}
-                    disabled={submitting}
-                  />
-                  {pendingFile ? "Change file…" : "Upload from drive…"}
-                </label>
-                {pendingFile && (
-                  <button
-                    type="button"
-                    className="btn-ghost btn-sm text-red-200"
-                    onClick={clearPendingFile}
-                    disabled={submitting}
-                  >
-                    Remove file
-                  </button>
+              {/* Hidden native picker — opened by the big button */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept={ACCEPT_IMAGES}
+                className="hidden"
+                onChange={onFileChange}
+                disabled={submitting}
+                aria-hidden="true"
+                tabIndex={-1}
+              />
+
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => {
+                  if (!submitting) fileInputRef.current?.click();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    if (!submitting) fileInputRef.current?.click();
+                  }
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (submitting) return;
+                  const file = e.dataTransfer?.files?.[0];
+                  if (!file || !fileInputRef.current) return;
+                  const dt = new DataTransfer();
+                  dt.items.add(file);
+                  fileInputRef.current.files = dt.files;
+                  onFileChange({ target: fileInputRef.current });
+                }}
+                className={`flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed px-4 py-8 text-center transition ${
+                  pendingFile
+                    ? "border-indigo-400/60 bg-indigo-500/15"
+                    : "border-white/30 bg-black/40 hover:border-indigo-400/50 hover:bg-white/5"
+                } ${submitting ? "pointer-events-none opacity-60" : ""}`}
+              >
+                <span className="text-3xl" aria-hidden="true">
+                  📁
+                </span>
+                <div>
+                  <p className="text-base font-semibold text-white">
+                    {pendingFile
+                      ? "Ganti foto dari drive"
+                      : "Pilih foto dari drive"}
+                  </p>
+                  <p className="mt-1 text-xs text-slate-300">
+                    Klik area ini atau seret & lepas gambar · JPEG, PNG, WebP,
+                    GIF · max {MAX_MB} MB
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="btn-primary btn-sm pointer-events-none"
+                  tabIndex={-1}
+                >
+                  {pendingFile ? "Change photo" : "Upload from drive"}
+                </button>
+
+                {fileName && (
+                  <p className="max-w-full truncate text-xs text-indigo-200">
+                    File: {fileName}
+                  </p>
                 )}
-                {(fileName || form.imageUrl) && (
-                  <span className="truncate text-xs text-slate-400">
-                    {fileName
-                      ? `Selected: ${fileName}`
-                      : form.imageUrl
-                        ? `Current: ${form.imageUrl}`
-                        : null}
-                  </span>
+                {!fileName && form.imageUrl && (
+                  <p className="max-w-full truncate text-xs text-slate-400">
+                    Saat ini: {form.imageUrl}
+                  </p>
                 )}
               </div>
 
-              <p className="text-xs text-slate-400">
-                JPEG, PNG, WebP, or GIF · max {MAX_MB} MB. Or paste a URL below.
-              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  className="btn-primary"
+                  disabled={submitting}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  📷 Upload foto dari drive
+                </button>
+                {pendingFile && (
+                  <button
+                    type="button"
+                    className="btn-danger btn-sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      clearPendingFile();
+                    }}
+                    disabled={submitting}
+                  >
+                    Hapus file terpilih
+                  </button>
+                )}
+              </div>
 
               {fileError && (
-                <em className="block text-xs not-italic text-red-300">
+                <p className="rounded-xl border border-red-400/40 bg-red-500/20 px-3 py-2 text-sm text-red-100">
                   {fileError}
-                </em>
+                </p>
               )}
 
-              <label className="admin-label !mt-1">
-                <span className="text-slate-400">Image URL (optional)</span>
+              <div className="overflow-hidden rounded-2xl border border-white/20 bg-black/50">
+                <p className="border-b border-white/10 px-3 py-2 text-xs font-medium uppercase tracking-wide text-slate-400">
+                  Preview
+                </p>
+                <div className="aspect-video max-h-56">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = PLACEHOLDER_IMAGE;
+                    }}
+                  />
+                </div>
+              </div>
+
+              <label className="admin-label">
+                <span className="text-slate-400">
+                  Image URL (opsional — alternatif jika tidak upload file)
+                </span>
                 <input
                   className="admin-input"
                   name="imageUrl"
                   value={form.imageUrl}
                   onChange={onChange}
-                  placeholder="https://… or leave empty if uploading a file"
+                  placeholder="https://… atau kosongkan jika upload file"
                   disabled={submitting || Boolean(pendingFile)}
                 />
                 {pendingFile && (
                   <span className="text-xs text-slate-500">
-                    File upload will replace the URL on save.
+                    File upload akan mengganti URL saat disimpan.
                   </span>
                 )}
               </label>
-            </div>
-
-            <div className="admin-label md:col-span-2">
-              <span>Image Preview</span>
-              <div className="aspect-video max-h-56 overflow-hidden rounded-2xl border border-white/20 bg-black/50">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={preview}
-                  alt="Preview"
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = PLACEHOLDER_IMAGE;
-                  }}
-                />
-              </div>
             </div>
             <label className="admin-label md:col-span-2">
               <span>Description *</span>
