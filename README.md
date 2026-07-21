@@ -46,9 +46,12 @@ Ubah di file `.env` (`ADMIN_USERNAME`, `ADMIN_PASSWORD`, `AUTH_SECRET`).
 | PUT | `/api/objects/:id` | Admin |
 | DELETE | `/api/objects/:id` | Admin |
 | POST | `/api/objects/reset` | Admin |
+| POST | `/api/upload` | Admin (multipart image → `/uploads/…`) |
 | POST | `/api/auth/login` | Publik |
 | POST | `/api/auth/logout` | Publik |
 | GET | `/api/auth/session` | Publik |
+
+Upload image: form field `file` (JPEG/PNG/WebP/GIF, max 5 MB). Disimpan di `public/uploads/`.
 
 ## Scripts
 

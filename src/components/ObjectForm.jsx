@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CATEGORIES, PLACEHOLDER_IMAGE } from "@/lib/data";
-import { apiCreateObject, apiGetObject, apiUpdateObject } from "@/lib/api";
+import {
+  apiCreateObject,
+  apiGetObject,
+  apiUpdateObject,
+  apiUploadImage,
+} from "@/lib/api";
 
 const EMPTY = {
   name: "",
@@ -20,14 +25,26 @@ const EMPTY = {
   description: "",
 };
 
+const ACCEPT_IMAGES = "image/jpeg,image/png,image/webp,image/gif";
+const MAX_MB = 5;
+
 export default function ObjectForm({ mode = "create", objectId = null }) {
   const router = useRouter();
+  const fileInputRef = useRef(null);
+  const localPreviewRef = useRef(null);
+
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [ready, setReady] = useState(mode === "create");
   const [missing, setMissing] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+
+  /** Pending file from drive; uploaded on save */
+  const [pendingFile, setPendingFile] = useState(null);
+  const [localPreview, setLocalPreview] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [fileError, setFileError] = useState("");
 
   useEffect(() => {
     if (mode !== "edit" || !objectId) {
@@ -72,6 +89,61 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
     };
   }, [mode, objectId]);
 
+  useEffect(() => {
+    return () => {
+      if (localPreviewRef.current) {
+        URL.revokeObjectURL(localPreviewRef.current);
+        localPreviewRef.current = null;
+      }
+    };
+  }, []);
+
+  function clearPendingFile({ keepError = false } = {}) {
+    if (localPreviewRef.current) {
+      URL.revokeObjectURL(localPreviewRef.current);
+      localPreviewRef.current = null;
+    }
+    setPendingFile(null);
+    setLocalPreview("");
+    setFileName("");
+    if (!keepError) setFileError("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
+
+  function onFileChange(e) {
+    const file = e.target.files?.[0];
+    setFileError("");
+
+    if (!file) {
+      clearPendingFile();
+      return;
+    }
+
+    const allowed = ACCEPT_IMAGES.split(",");
+    if (!allowed.includes(file.type)) {
+      clearPendingFile({ keepError: true });
+      setFileError("Gunakan file JPEG, PNG, WebP, atau GIF.");
+      return;
+    }
+
+    if (file.size > MAX_MB * 1024 * 1024) {
+      clearPendingFile({ keepError: true });
+      setFileError(`Ukuran maksimal ${MAX_MB} MB.`);
+      return;
+    }
+
+    if (localPreviewRef.current) {
+      URL.revokeObjectURL(localPreviewRef.current);
+    }
+    const url = URL.createObjectURL(file);
+    localPreviewRef.current = url;
+    setPendingFile(file);
+    setLocalPreview(url);
+    setFileName(file.name);
+  }
+
   function onChange(e) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -92,23 +164,31 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
     e.preventDefault();
     if (!validate()) return;
 
-    const payload = {
-      name: form.name.trim(),
-      scientificName: form.scientificName.trim(),
-      category: form.category,
-      diameter: form.diameter.trim(),
-      mass: form.mass.trim(),
-      gravity: form.gravity.trim(),
-      temperature: form.temperature.trim(),
-      distance: form.distance.trim(),
-      yearDiscovered: form.yearDiscovered.trim(),
-      imageUrl: form.imageUrl.trim(),
-      description: form.description.trim(),
-    };
-
     setSubmitting(true);
     setSubmitError("");
+    setFileError("");
+
     try {
+      let imageUrl = form.imageUrl.trim();
+
+      if (pendingFile) {
+        imageUrl = await apiUploadImage(pendingFile);
+      }
+
+      const payload = {
+        name: form.name.trim(),
+        scientificName: form.scientificName.trim(),
+        category: form.category,
+        diameter: form.diameter.trim(),
+        mass: form.mass.trim(),
+        gravity: form.gravity.trim(),
+        temperature: form.temperature.trim(),
+        distance: form.distance.trim(),
+        yearDiscovered: form.yearDiscovered.trim(),
+        imageUrl,
+        description: form.description.trim(),
+      };
+
       if (mode === "edit" && objectId) {
         await apiUpdateObject(objectId, payload);
         router.push(`/detail?id=${encodeURIComponent(objectId)}`);
@@ -144,7 +224,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
     );
   }
 
-  const preview = form.imageUrl || PLACEHOLDER_IMAGE;
+  const preview = localPreview || form.imageUrl || PLACEHOLDER_IMAGE;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
@@ -264,16 +344,72 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 disabled={submitting}
               />
             </label>
-            <label className="admin-label md:col-span-2">
-              <span>Image URL</span>
-              <input
-                className="admin-input"
-                name="imageUrl"
-                value={form.imageUrl}
-                onChange={onChange}
-                disabled={submitting}
-              />
-            </label>
+
+            {/* Image: upload from drive + optional URL */}
+            <div className="admin-label md:col-span-2 space-y-3">
+              <span>Image</span>
+
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <label className="btn-ghost btn-sm cursor-pointer">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept={ACCEPT_IMAGES}
+                    className="sr-only"
+                    onChange={onFileChange}
+                    disabled={submitting}
+                  />
+                  {pendingFile ? "Change file…" : "Upload from drive…"}
+                </label>
+                {pendingFile && (
+                  <button
+                    type="button"
+                    className="btn-ghost btn-sm text-red-200"
+                    onClick={clearPendingFile}
+                    disabled={submitting}
+                  >
+                    Remove file
+                  </button>
+                )}
+                {(fileName || form.imageUrl) && (
+                  <span className="truncate text-xs text-slate-400">
+                    {fileName
+                      ? `Selected: ${fileName}`
+                      : form.imageUrl
+                        ? `Current: ${form.imageUrl}`
+                        : null}
+                  </span>
+                )}
+              </div>
+
+              <p className="text-xs text-slate-400">
+                JPEG, PNG, WebP, or GIF · max {MAX_MB} MB. Or paste a URL below.
+              </p>
+
+              {fileError && (
+                <em className="block text-xs not-italic text-red-300">
+                  {fileError}
+                </em>
+              )}
+
+              <label className="admin-label !mt-1">
+                <span className="text-slate-400">Image URL (optional)</span>
+                <input
+                  className="admin-input"
+                  name="imageUrl"
+                  value={form.imageUrl}
+                  onChange={onChange}
+                  placeholder="https://… or leave empty if uploading a file"
+                  disabled={submitting || Boolean(pendingFile)}
+                />
+                {pendingFile && (
+                  <span className="text-xs text-slate-500">
+                    File upload will replace the URL on save.
+                  </span>
+                )}
+              </label>
+            </div>
+
             <div className="admin-label md:col-span-2">
               <span>Image Preview</span>
               <div className="aspect-video max-h-56 overflow-hidden rounded-2xl border border-white/20 bg-black/50">
@@ -319,7 +455,9 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
             </Link>
             <button type="submit" className="btn-primary" disabled={submitting}>
               {submitting
-                ? "Saving…"
+                ? pendingFile
+                  ? "Uploading & saving…"
+                  : "Saving…"
                 : mode === "edit"
                   ? "Save Changes"
                   : "Save Object"}
