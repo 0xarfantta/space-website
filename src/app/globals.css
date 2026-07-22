@@ -572,3 +572,44 @@
     transform: none !important;
   }
 }
+
+/* ---------- Solar system map orbit animations ---------- */
+@keyframes ss-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ss-counter {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+.ss-orbit-spin {
+  transform-origin: center;
+  animation-name: ss-orbit;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.ss-orbit-spin.is-paused {
+  animation-play-state: paused;
+}
+
+.ss-counter-spin {
+  transform-origin: center;
+  animation-name: ss-counter;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.ss-counter-spin.is-paused {
+  animation-play-state: paused;
+}

@@ -142,6 +142,12 @@ export default function DetailPage() {
                 <Link href="/#catalog" className="btn-ghost">
                   Kembali ke Katalog
                 </Link>
+                <Link
+                  href={`/compare?a=${encodeURIComponent(obj.id)}`}
+                  className="btn-ghost"
+                >
+                  Bandingkan
+                </Link>
                 {authReady && isAdmin && (
                   <>
                     <Link

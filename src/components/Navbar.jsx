@@ -35,7 +35,16 @@ export default function Navbar() {
   const links = [
     { href: "/", label: "Beranda", active: pathname === "/" },
     { href: "/#catalog", label: "Katalog", active: false },
-    { href: "/#categories", label: "Kategori", active: false },
+    {
+      href: "/solar-system",
+      label: "Tata Surya",
+      active: pathname === "/solar-system",
+    },
+    {
+      href: "/compare",
+      label: "Bandingkan",
+      active: pathname === "/compare",
+    },
     { href: "/#about", label: "Tentang", active: false },
   ];
 

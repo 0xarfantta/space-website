@@ -21,6 +21,18 @@ export default function Footer() {
             Katalog
           </Link>
           <Link
+            href="/solar-system"
+            className="text-slate-200 transition hover:text-white"
+          >
+            Tata Surya
+          </Link>
+          <Link
+            href="/compare"
+            className="text-slate-200 transition hover:text-white"
+          >
+            Bandingkan
+          </Link>
+          <Link
             href="/#about"
             className="text-slate-200 transition hover:text-white"
           >

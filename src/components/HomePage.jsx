@@ -56,12 +56,18 @@ export default function HomePage() {
               Temukan planet, galaksi, nebula, bintang, lubang hitam, dan berbagai
               objek luar angkasa menarik lainnya.
             </p>
-            <div className="mb-8 flex w-full max-w-md flex-col justify-center gap-3 xs:mx-auto xs:max-w-none xs:flex-row xs:flex-wrap sm:mb-10">
+            <div className="mb-8 flex w-full max-w-lg flex-col justify-center gap-3 xs:mx-auto xs:max-w-none xs:flex-row xs:flex-wrap sm:mb-10">
               <a href="#catalog" className="btn-primary btn-lg w-full xs:w-auto">
                 Mulai Jelajah
               </a>
-              <a href="#about" className="btn-ghost btn-lg w-full xs:w-auto">
-                Tentang Orbitra
+              <a
+                href="/solar-system"
+                className="btn-ghost btn-lg w-full xs:w-auto"
+              >
+                Peta Tata Surya
+              </a>
+              <a href="/compare" className="btn-ghost btn-lg w-full xs:w-auto">
+                Bandingkan
               </a>
             </div>
             <div className="glass inline-flex gap-6 rounded-2xl px-6 py-4 sm:gap-8 sm:px-8">
@@ -197,7 +203,7 @@ export default function HomePage() {
               tanpa perlu mendaftar.
             </p>
 
-            <div className="mt-10 grid grid-cols-1 gap-6 text-left sm:grid-cols-3">
+            <div className="mt-10 grid grid-cols-1 gap-6 text-left sm:grid-cols-2 lg:grid-cols-4">
               <div className="surface-soft rounded-2xl p-5 transition hover:border-white/30 hover:bg-white/[0.12]">
                 <h3 className="text-base font-semibold text-white drop-shadow-sm">
                   Jelajah & Cari
@@ -209,12 +215,33 @@ export default function HomePage() {
               </div>
               <div className="surface-soft rounded-2xl p-5 transition hover:border-white/30 hover:bg-white/[0.12]">
                 <h3 className="text-base font-semibold text-white drop-shadow-sm">
-                  Data Detail
+                  Peta Tata Surya
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-200">
-                  Akses data fisik seperti massa, diameter, gravitasi, suhu rata-rata,
-                  dan jarak dari Bumi.
+                  Visual orbit interaktif dari Merkurius hingga Neptunus — klik
+                  planet untuk info & tautan katalog.
                 </p>
+                <a
+                  href="/solar-system"
+                  className="mt-3 inline-block text-sm font-medium text-indigo-300 hover:text-indigo-200"
+                >
+                  Buka peta →
+                </a>
+              </div>
+              <div className="surface-soft rounded-2xl p-5 transition hover:border-white/30 hover:bg-white/[0.12]">
+                <h3 className="text-base font-semibold text-white drop-shadow-sm">
+                  Bandingkan Objek
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-200">
+                  Bandingkan dua benda langit berdampingan: diameter, massa,
+                  gravitasi, suhu, dan lainnya.
+                </p>
+                <a
+                  href="/compare"
+                  className="mt-3 inline-block text-sm font-medium text-indigo-300 hover:text-indigo-200"
+                >
+                  Mulai bandingkan →
+                </a>
               </div>
               <div className="surface-soft rounded-2xl p-5 transition hover:border-white/30 hover:bg-white/[0.12]">
                 <h3 className="text-base font-semibold text-white drop-shadow-sm">
@@ -230,9 +257,10 @@ export default function HomePage() {
             <div className="mt-8 flex flex-wrap justify-center gap-2">
               {[
                 "Katalog Benda Langit",
+                "Peta Tata Surya",
+                "Bandingkan Objek",
                 "Pencarian Langsung",
                 "Properti Fisik",
-                "Ramah Seluler",
                 "Panel Admin",
               ].map((t) => (
                 <span
