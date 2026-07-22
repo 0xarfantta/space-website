@@ -100,6 +100,7 @@ export async function apiLogin(username, password) {
   const res = await fetch("/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
     body: JSON.stringify({ username, password }),
   });
   const data = await parseJson(res);
@@ -110,11 +111,17 @@ export async function apiLogin(username, password) {
 }
 
 export async function apiLogout() {
-  await fetch("/api/auth/logout", { method: "POST" });
+  await fetch("/api/auth/logout", {
+    method: "POST",
+    credentials: "same-origin",
+  });
 }
 
 export async function apiGetSession() {
-  const res = await fetch("/api/auth/session", { cache: "no-store" });
+  const res = await fetch("/api/auth/session", {
+    cache: "no-store",
+    credentials: "same-origin",
+  });
   const data = await parseJson(res);
   if (!res.ok) return null;
   return data.session || null;

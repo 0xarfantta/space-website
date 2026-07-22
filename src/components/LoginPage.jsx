@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -20,7 +20,6 @@ function safeNextPath(raw) {
 
 export default function LoginPage() {
   const { isAdmin, ready, login } = useAuth();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const nextPath = safeNextPath(searchParams.get("next"));
 
@@ -38,9 +37,10 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (ready && isAdmin) {
-      router.replace(nextPath);
+      // Hard nav agar tidak stuck di "mengalihkan…"
+      window.location.replace(nextPath);
     }
-  }, [ready, isAdmin, router, nextPath]);
+  }, [ready, isAdmin, nextPath]);
 
   function validate() {
     const next = {};
@@ -64,13 +64,14 @@ export default function LoginPage() {
         setSubmitting(false);
         return;
       }
-      router.replace(nextPath);
+      window.location.assign(nextPath);
     } catch {
       setError("Login gagal. Coba lagi.");
       setSubmitting(false);
     }
   }
 
+  // Sudah login → jangan tampilkan form (hanya status redirect)
   if (ready && isAdmin) {
     return (
       <div className="flex min-h-screen flex-col">
@@ -84,19 +85,7 @@ export default function LoginPage() {
     );
   }
 
-  if (!ready) {
-    return (
-      <div className="flex min-h-screen flex-col">
-        <Navbar />
-        <main className="flex flex-1 items-center justify-center px-4 py-16">
-          <p className="glass rounded-xl px-4 py-3 text-sm font-medium text-white">
-            Memuat…
-          </p>
-        </main>
-      </div>
-    );
-  }
-
+  // Tampilkan form segera (jangan nunggu session API), kecuali sudah admin
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />

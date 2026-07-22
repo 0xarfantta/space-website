@@ -3,18 +3,34 @@
 import { useCallback, useEffect, useState } from "react";
 import { apiGetSession, apiLogin, apiLogout } from "@/lib/api";
 
+const SESSION_TIMEOUT_MS = 4000;
+
 export function useAuth() {
   const [session, setSession] = useState(null);
   const [ready, setReady] = useState(false);
 
   const refresh = useCallback(async () => {
+    let timedOut = false;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      setSession(null);
+      setReady(true);
+    }, SESSION_TIMEOUT_MS);
+
     try {
       const s = await apiGetSession();
-      setSession(s);
+      if (!timedOut) {
+        setSession(s);
+      }
     } catch {
-      setSession(null);
+      if (!timedOut) {
+        setSession(null);
+      }
     } finally {
-      setReady(true);
+      clearTimeout(timer);
+      if (!timedOut) {
+        setReady(true);
+      }
     }
   }, []);
 
@@ -26,6 +42,7 @@ export function useAuth() {
     const result = await apiLogin(username, password);
     if (result.ok) {
       setSession(result.session);
+      setReady(true);
     }
     return result;
   }, []);
@@ -35,6 +52,7 @@ export function useAuth() {
       await apiLogout();
     } finally {
       setSession(null);
+      setReady(true);
     }
   }, []);
 
