@@ -150,10 +150,19 @@ export default function DashboardPage() {
               {!collapsed && <span>{item.label}</span>}
             </a>
           ))}
-          <Link href="/" title="Kembali ke beranda" className="admin-nav-link">
+          <button
+            type="button"
+            title="Keluar admin dan buka situs publik"
+            className="admin-nav-link w-full text-left"
+            onClick={async () => {
+              // Keluar session admin agar di situs publik tidak bisa edit lagi
+              await logout();
+              router.push("/");
+            }}
+          >
             <span className="w-6 text-center text-indigo-200">←</span>
-            {!collapsed && <span>Kembali ke Beranda</span>}
-          </Link>
+            {!collapsed && <span>Ke Situs Publik</span>}
+          </button>
         </nav>
       </aside>
 

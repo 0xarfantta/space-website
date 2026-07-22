@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { PLACEHOLDER_IMAGE } from "@/lib/data";
 import { apiGetObject } from "@/lib/api";
-import { useAuth } from "@/hooks/useAuth";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import DetailImage from "@/components/DetailImage";
@@ -13,7 +12,6 @@ import DetailImage from "@/components/DetailImage";
 export default function DetailPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const { isAdmin, ready: authReady } = useAuth();
   const [obj, setObj] = useState(null);
   const [ready, setReady] = useState(false);
 
@@ -148,19 +146,6 @@ export default function DetailPage() {
                 >
                   Bandingkan
                 </Link>
-                {authReady && isAdmin && (
-                  <>
-                    <Link
-                      href={`/edit-object?id=${encodeURIComponent(obj.id)}`}
-                      className="btn-primary"
-                    >
-                      Ubah Objek
-                    </Link>
-                    <Link href="/dashboard" className="btn-ghost">
-                      Dasbor
-                    </Link>
-                  </>
-                )}
               </div>
             </div>
           </div>

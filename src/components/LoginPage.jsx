@@ -36,8 +36,10 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (ready && isAdmin) {
-      // Hard nav agar tidak stuck di "mengalihkan…"
+    if (!ready) return;
+    // Hanya auto-redirect jika mode admin UI masih aktif (belum ke situs publik).
+    // Cookie saja tidak cukup — user harus login lagi setelah meninggalkan area admin.
+    if (isAdmin) {
       window.location.replace(nextPath);
     }
   }, [ready, isAdmin, nextPath]);
@@ -71,14 +73,14 @@ export default function LoginPage() {
     }
   }
 
-  // Sudah login → jangan tampilkan form (hanya status redirect)
+  // Mode admin UI aktif → jangan tampilkan form (hanya status redirect)
   if (ready && isAdmin) {
     return (
       <div className="flex min-h-screen flex-col">
         <Navbar />
         <main className="flex flex-1 items-center justify-center px-4 py-16">
           <p className="glass rounded-xl px-4 py-3 text-sm font-medium text-white">
-            Mengalihkan ke dasbor…
+            Mengalihkan ke area admin…
           </p>
         </main>
       </div>

@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import { getAdminMode } from "@/lib/admin-mode";
 
 function buildNextPath(pathname) {
   if (typeof window === "undefined") {
@@ -13,46 +14,61 @@ function buildNextPath(pathname) {
   return `${pathname || "/dashboard"}${qs}`;
 }
 
+/**
+ * Hanya izinkan akses jika:
+ * - session admin valid (cookie), DAN
+ * - admin UI mode aktif (belum pindah ke situs publik)
+ *
+ * Jika cookie ada tapi mode sudah dibersihkan → arahkan ke /login
+ * agar user harus masuk area admin secara eksplisit lagi.
+ */
 export default function AdminGuard({ children }) {
-  const { isAdmin, ready } = useAuth();
+  const { isAdmin, isLoggedInAdmin, ready } = useAuth();
   const pathname = usePathname();
-
-  const loginHref = useMemo(() => {
-    // On server, path only; client effect uses full path with query
-    const base = pathname || "/dashboard";
-    return `/login?next=${encodeURIComponent(base)}`;
-  }, [pathname]);
+  const [gateReady, setGateReady] = useState(false);
+  const [allowed, setAllowed] = useState(false);
 
   useEffect(() => {
     if (!ready) return;
-    if (isAdmin) return;
 
+    const modeOn = getAdminMode();
+    const ok = Boolean(isLoggedInAdmin && modeOn && isAdmin);
+
+    // isAdmin may lag one tick after enterAdminMode; also trust cookie+mode
+    const okLoose = Boolean(isLoggedInAdmin && modeOn);
+
+    if (ok || okLoose) {
+      setAllowed(true);
+      setGateReady(true);
+      return;
+    }
+
+    setAllowed(false);
+    setGateReady(true);
     const next = encodeURIComponent(buildNextPath(pathname));
     window.location.replace(`/login?next=${next}`);
-  }, [ready, isAdmin, pathname]);
+  }, [ready, isAdmin, isLoggedInAdmin, pathname]);
 
-  if (ready && isAdmin) {
-    return children;
+  const loginHref = useMemo(() => {
+    return `/login?next=${encodeURIComponent(buildNextPath(pathname))}`;
+  }, [pathname]);
+
+  if (!gateReady || !allowed) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-4">
+        <p className="glass rounded-xl px-4 py-3 text-sm font-medium text-white">
+          {!ready || !gateReady
+            ? "Memeriksa akses…"
+            : "Mengalihkan ke login admin…"}
+        </p>
+        {gateReady && !allowed && (
+          <Link href={loginHref} className="btn-primary">
+            Buka form login
+          </Link>
+        )}
+      </div>
+    );
   }
 
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-4">
-      <p className="glass rounded-xl px-4 py-3 text-sm font-medium text-white">
-        {!ready ? "Memeriksa akses…" : "Mengalihkan ke login admin…"}
-      </p>
-      {ready && !isAdmin && (
-        <Link
-          href={`/login?next=${encodeURIComponent(buildNextPath(pathname))}`}
-          className="btn-primary"
-        >
-          Buka form login
-        </Link>
-      )}
-      {!ready && (
-        <Link href={loginHref} className="text-sm text-indigo-200 underline">
-          Ke halaman login
-        </Link>
-      )}
-    </div>
-  );
+  return children;
 }

@@ -1,6 +1,7 @@
 import { Poppins } from "next/font/google";
 import BgScene from "@/components/BgScene";
 import LoadingScreen from "@/components/LoadingScreen";
+import PublicModeGuard from "@/components/PublicModeGuard";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -41,7 +42,9 @@ export default function RootLayout({ children }) {
       <body className="font-sans text-slate-50" suppressHydrationWarning>
         <BgScene />
         <LoadingScreen />
-        <div className="relative z-10 min-h-screen">{children}</div>
+        <div className="relative z-10 min-h-screen">
+          <PublicModeGuard>{children}</PublicModeGuard>
+        </div>
       </body>
     </html>
   );
