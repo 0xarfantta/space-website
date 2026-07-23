@@ -26,10 +26,10 @@ function makeStars(count, salt, opts = {}) {
   return Array.from({ length: count }, (_, i) => {
     const n = salt + i * 17;
     const hueRoll = seeded(n + 3);
+    // Neutral whites / soft cool gray only (no purple)
     let color = "255,255,255";
-    if (hueRoll > 0.82) color = "165,180,252";
-    else if (hueRoll > 0.68) color = "196,181,253";
-    else if (hueRoll > 0.55) color = "186,230,253";
+    if (hueRoll > 0.75) color = "226,232,240";
+    else if (hueRoll > 0.55) color = "241,245,249";
 
     return {
       id: `${salt}-${i}`,
@@ -64,7 +64,7 @@ function makeDust(count) {
     delay: seeded(i + 331) * 8,
     duration: 12 + seeded(i + 341) * 18,
     opacity: 0.05 + seeded(i + 351) * 0.1,
-    hue: seeded(i + 361) > 0.5 ? "129,140,248" : "167,139,250",
+    hue: seeded(i + 361) > 0.5 ? "226,232,240" : "203,213,225",
   }));
 }
 
@@ -206,10 +206,9 @@ export default function BgScene() {
         />
       </div>
 
-      {/* Cosmic color grade */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0618]/70 via-[#120a2e]/30 to-[#05030f]/75" />
-      <div className="absolute inset-0 bg-gradient-to-tr from-indigo-950/35 via-transparent to-violet-950/25" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_22%,rgba(5,3,15,0.6)_100%)]" />
+      {/* Neutral vignette only — no purple color cast */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/15 to-black/55" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_28%,rgba(0,0,0,0.5)_100%)]" />
 
       {/* Nebula orbs */}
       <div
@@ -275,18 +274,13 @@ export default function BgScene() {
             background: `
               radial-gradient(
                 720px circle at var(--spotlight-x) var(--spotlight-y),
-                rgba(129, 140, 248, 0.22),
+                rgba(255, 255, 255, 0.12),
                 transparent 55%
               ),
               radial-gradient(
                 420px circle at calc(var(--spotlight-x) + 10%) calc(var(--spotlight-y) - 8%),
-                rgba(167, 139, 250, 0.14),
+                rgba(255, 255, 255, 0.06),
                 transparent 50%
-              ),
-              radial-gradient(
-                280px circle at calc(var(--spotlight-x) - 12%) calc(var(--spotlight-y) + 10%),
-                rgba(56, 189, 248, 0.08),
-                transparent 45%
               )
             `,
           }}
