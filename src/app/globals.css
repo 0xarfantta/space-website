@@ -321,17 +321,22 @@
     animation: twinkle ease-in-out infinite;
   }
 
+  .space-star-near {
+    border-radius: 9999px;
+  }
+
   .shooting-star {
     background: linear-gradient(
       90deg,
-      rgba(255, 255, 255, 0.95),
-      rgba(199, 210, 254, 0.55),
+      rgba(255, 255, 255, 0.98),
+      rgba(199, 210, 254, 0.75),
+      rgba(167, 139, 250, 0.2),
       transparent
     );
     transform: rotate(-28deg);
     opacity: 0;
     animation: shoot linear infinite;
-    filter: drop-shadow(0 0 6px rgba(165, 180, 252, 0.8));
+    filter: drop-shadow(0 0 8px rgba(165, 180, 252, 0.95));
   }
 
   .animate-orb-a {
@@ -344,6 +349,85 @@
 
   .animate-orb-c {
     animation: orb-drift-c 18s ease-in-out infinite alternate;
+  }
+
+  .space-nebula {
+    filter: blur(90px);
+    will-change: opacity, transform;
+  }
+
+  .space-nebula--a {
+    background: radial-gradient(
+      circle,
+      rgba(99, 102, 241, 0.45) 0%,
+      rgba(79, 70, 229, 0.15) 45%,
+      transparent 70%
+    );
+  }
+
+  .space-nebula--b {
+    background: radial-gradient(
+      circle,
+      rgba(139, 92, 246, 0.4) 0%,
+      rgba(124, 58, 237, 0.12) 45%,
+      transparent 70%
+    );
+  }
+
+  .space-nebula--c {
+    background: radial-gradient(
+      circle,
+      rgba(217, 70, 239, 0.28) 0%,
+      rgba(56, 189, 248, 0.1) 40%,
+      transparent 68%
+    );
+  }
+
+  .space-nebula--d {
+    background: radial-gradient(
+      circle,
+      rgba(56, 189, 248, 0.22) 0%,
+      rgba(99, 102, 241, 0.08) 50%,
+      transparent 70%
+    );
+  }
+
+  .space-milkyway {
+    background: linear-gradient(
+      105deg,
+      transparent 0%,
+      rgba(165, 180, 252, 0.06) 25%,
+      rgba(199, 210, 254, 0.14) 48%,
+      rgba(167, 139, 250, 0.1) 62%,
+      transparent 100%
+    );
+    filter: blur(28px);
+    transform: rotate(-12deg);
+    opacity: 0.85;
+  }
+
+  .space-milkyway--drift {
+    animation: milkyway-drift 40s ease-in-out infinite alternate;
+  }
+
+  .space-dust {
+    pointer-events: none;
+    filter: blur(18px);
+  }
+
+  .space-dust--float {
+    animation: dust-float ease-in-out infinite alternate;
+  }
+
+  .space-horizon {
+    background: linear-gradient(
+      to top,
+      rgba(99, 102, 241, 0.18) 0%,
+      rgba(139, 92, 246, 0.08) 35%,
+      transparent 100%
+    );
+    filter: blur(2px);
+    pointer-events: none;
   }
 }
 
@@ -363,57 +447,90 @@
 @keyframes twinkle {
   0%,
   100% {
-    opacity: 0.25;
+    opacity: 0.3;
     transform: scale(0.85);
   }
-  50% {
+  40% {
     opacity: 1;
-    transform: scale(1.15);
+    transform: scale(1.2);
+  }
+  70% {
+    opacity: 0.55;
+    transform: scale(1);
   }
 }
 
 @keyframes shoot {
   0% {
     opacity: 0;
-    transform: rotate(-28deg) translateX(0) scaleX(0.3);
+    transform: rotate(-28deg) translateX(0) scaleX(0.25);
   }
-  8% {
+  6% {
     opacity: 1;
   }
-  35% {
-    opacity: 0;
-    transform: rotate(-28deg) translateX(42vw) scaleX(1);
+  28% {
+    opacity: 0.15;
+    transform: rotate(-28deg) translateX(48vw) scaleX(1.05);
   }
+  32%,
   100% {
     opacity: 0;
-    transform: rotate(-28deg) translateX(42vw) scaleX(1);
+    transform: rotate(-28deg) translateX(52vw) scaleX(1);
   }
 }
 
 @keyframes orb-drift-a {
   0% {
-    opacity: 0.35;
+    opacity: 0.4;
+    transform: scale(1) translate(0, 0);
   }
   100% {
-    opacity: 0.55;
+    opacity: 0.75;
+    transform: scale(1.08) translate(2%, -3%);
   }
 }
 
 @keyframes orb-drift-b {
   0% {
-    opacity: 0.28;
+    opacity: 0.32;
+    transform: scale(1) translate(0, 0);
   }
   100% {
-    opacity: 0.48;
+    opacity: 0.65;
+    transform: scale(1.1) translate(-3%, 2%);
   }
 }
 
 @keyframes orb-drift-c {
   0% {
-    opacity: 0.22;
+    opacity: 0.28;
+    transform: scale(0.95) translate(0, 0);
   }
   100% {
-    opacity: 0.4;
+    opacity: 0.55;
+    transform: scale(1.12) translate(2%, 3%);
+  }
+}
+
+@keyframes milkyway-drift {
+  0% {
+    opacity: 0.55;
+    transform: rotate(-12deg) translateX(-2%);
+  }
+  100% {
+    opacity: 0.9;
+    transform: rotate(-10deg) translateX(2%);
+  }
+}
+
+@keyframes dust-float {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translate(4%, -6%) scale(1.15);
+    opacity: 0.7;
   }
 }
 
@@ -662,6 +779,8 @@
   .animate-orb-a,
   .animate-orb-b,
   .animate-orb-c,
+  .space-milkyway--drift,
+  .space-dust--float,
   .detail-panel-enter,
   .detail-meta-card,
   .detail-image-wrap,
@@ -672,6 +791,7 @@
   .detail-image-chip,
   .detail-orbit-dot,
   .detail-image-card {
+    animation: none !important;
     transform: none !important;
   }
 }

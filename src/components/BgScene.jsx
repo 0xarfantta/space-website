@@ -2,8 +2,11 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const STAR_COUNT = 48;
-const SHOOTING_COUNT = 4;
+const FAR_STAR_COUNT = 70;
+const MID_STAR_COUNT = 45;
+const NEAR_STAR_COUNT = 22;
+const SHOOTING_COUNT = 6;
+const DUST_COUNT = 18;
 
 /** Deterministic pseudo-random (identical on server + client) */
 function seeded(n) {
@@ -11,32 +14,79 @@ function seeded(n) {
   return x - Math.floor(x);
 }
 
-function makeStars(count) {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i,
-    left: seeded(i + 1) * 100,
-    top: seeded(i + 17) * 100,
-    size: seeded(i + 33) * 2.2 + 0.8,
-    delay: seeded(i + 51) * 5,
-    duration: 2 + seeded(i + 71) * 4,
-    opacity: 0.35 + seeded(i + 91) * 0.65,
-  }));
+function makeStars(count, salt, opts = {}) {
+  const {
+    sizeMin = 0.6,
+    sizeMax = 2.2,
+    topMax = 100,
+    opacityMin = 0.25,
+    opacityMax = 0.9,
+  } = opts;
+  return Array.from({ length: count }, (_, i) => {
+    const n = salt + i * 17;
+    const hueRoll = seeded(n + 3);
+    let color = "255,255,255";
+    if (hueRoll > 0.82) color = "165,180,252"; // indigo
+    else if (hueRoll > 0.68) color = "196,181,253"; // violet
+    else if (hueRoll > 0.55) color = "186,230,253"; // cyan
+    return {
+      id: `${salt}-${i}`,
+      left: seeded(n + 1) * 100,
+      top: seeded(n + 2) * topMax,
+      size: sizeMin + seeded(n + 4) * (sizeMax - sizeMin),
+      delay: seeded(n + 5) * 6,
+      duration: 2.2 + seeded(n + 6) * 4.5,
+      opacity: opacityMin + seeded(n + 7) * (opacityMax - opacityMin),
+      color,
+    };
+  });
 }
 
 function makeShooters(count) {
   return Array.from({ length: count }, (_, i) => ({
     id: i,
-    top: 8 + seeded(i + 111) * 55,
-    left: 10 + seeded(i + 131) * 70,
-    delay: i * 3.2 + seeded(i + 151) * 2,
-    duration: 1.4 + seeded(i + 171) * 1.2,
-    length: 80 + seeded(i + 191) * 100,
+    top: 4 + seeded(i + 201) * 48,
+    left: 5 + seeded(i + 211) * 75,
+    delay: i * 2.4 + seeded(i + 221) * 2.5,
+    duration: 1.2 + seeded(i + 231) * 1.4,
+    length: 90 + seeded(i + 241) * 140,
   }));
 }
 
-// Module-level constants — same values during SSR and client hydration
-const STARS = makeStars(STAR_COUNT);
+function makeDust(count) {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i,
+    left: seeded(i + 301) * 100,
+    top: seeded(i + 311) * 100,
+    size: 40 + seeded(i + 321) * 120,
+    delay: seeded(i + 331) * 8,
+    duration: 12 + seeded(i + 341) * 18,
+    opacity: 0.04 + seeded(i + 351) * 0.08,
+    hue: seeded(i + 361) > 0.5 ? "129,140,248" : "167,139,250",
+  }));
+}
+
+const FAR_STARS = makeStars(FAR_STAR_COUNT, 1000, {
+  sizeMin: 0.5,
+  sizeMax: 1.4,
+  opacityMin: 0.2,
+  opacityMax: 0.65,
+});
+const MID_STARS = makeStars(MID_STAR_COUNT, 2000, {
+  sizeMin: 1,
+  sizeMax: 2.4,
+  opacityMin: 0.35,
+  opacityMax: 0.9,
+});
+const NEAR_STARS = makeStars(NEAR_STAR_COUNT, 3000, {
+  sizeMin: 1.6,
+  sizeMax: 3.4,
+  opacityMin: 0.5,
+  opacityMax: 1,
+  topMax: 75,
+});
 const SHOOTERS = makeShooters(SHOOTING_COUNT);
+const DUST = makeDust(DUST_COUNT);
 
 export default function BgScene() {
   const rootRef = useRef(null);
@@ -44,14 +94,12 @@ export default function BgScene() {
   const current = useRef({ x: 0, y: 0 });
   const rafRef = useRef(0);
 
-  // Always start false so server HTML === first client render.
-  // Motion prefs & parallax only kick in after mount.
   const [mounted, setMounted] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   const animate = useCallback(() => {
-    current.current.x += (target.current.x - current.current.x) * 0.06;
-    current.current.y += (target.current.y - current.current.y) * 0.06;
+    current.current.x += (target.current.x - current.current.x) * 0.055;
+    current.current.y += (target.current.y - current.current.y) * 0.055;
 
     const el = rootRef.current;
     if (el) {
@@ -59,11 +107,11 @@ export default function BgScene() {
       el.style.setProperty("--my", current.current.y.toFixed(3));
       el.style.setProperty(
         "--spotlight-x",
-        `${(50 + current.current.x * 28).toFixed(2)}%`
+        `${(50 + current.current.x * 32).toFixed(2)}%`
       );
       el.style.setProperty(
         "--spotlight-y",
-        `${(45 + current.current.y * 28).toFixed(2)}%`
+        `${(42 + current.current.y * 28).toFixed(2)}%`
       );
     }
 
@@ -72,10 +120,8 @@ export default function BgScene() {
 
   useEffect(() => {
     setMounted(true);
-
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReducedMotion(mq.matches);
-
     const onChange = (e) => setReducedMotion(e.matches);
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
@@ -92,7 +138,6 @@ export default function BgScene() {
       target.current.x = (e.clientX / w) * 2 - 1;
       target.current.y = (e.clientY / h) * 2 - 1;
     };
-
     const onLeave = () => {
       target.current.x = 0;
       target.current.y = 0;
@@ -112,37 +157,36 @@ export default function BgScene() {
 
   const motionOn = mounted && !reducedMotion;
 
-  const parallax = (factorX, factorY) =>
+  const parallax = (fx, fy) =>
     motionOn
       ? {
-          transform: `translate3d(calc(var(--mx) * ${factorX}px), calc(var(--my) * ${factorY}px), 0)`,
+          transform: `translate3d(calc(var(--mx) * ${fx}px), calc(var(--my) * ${fy}px), 0)`,
         }
       : undefined;
 
   return (
     <div
       ref={rootRef}
-      className="bg-scene-root pointer-events-none fixed inset-0 z-0 overflow-hidden bg-orbit-deep"
+      className="bg-scene-root pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#05030f]"
       aria-hidden="true"
-      // Ignore attribute diffs from browser extensions on this subtree
       suppressHydrationWarning
       style={{
         ["--mx"]: "0",
         ["--my"]: "0",
         ["--spotlight-x"]: "50%",
-        ["--spotlight-y"]: "45%",
+        ["--spotlight-y"]: "42%",
       }}
     >
-      {/* Wallpaper — zoomed out (no crop zoom), sharp HD rendering */}
+      {/* Base photo */}
       <div
         className="absolute inset-0 will-change-transform"
         style={
           motionOn
             ? {
                 transform:
-                  "translate3d(calc(var(--mx) * -8px), calc(var(--my) * -6px), 0)",
+                  "translate3d(calc(var(--mx) * -10px), calc(var(--my) * -8px), 0) scale(1.03)",
               }
-            : undefined
+            : { transform: "scale(1.02)" }
         }
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -153,11 +197,6 @@ export default function BgScene() {
           fetchPriority="high"
           className="h-full w-full object-cover object-center"
           style={{
-            /* Full-viewport HD photo; no extra scale-up (zoom out vs old 1.12x) */
-            objectFit: "cover",
-            objectPosition: "center center",
-            transform: "scale(1)",
-            transformOrigin: "center center",
             imageRendering: "auto",
             WebkitBackfaceVisibility: "hidden",
             backfaceVisibility: "hidden",
@@ -165,48 +204,160 @@ export default function BgScene() {
         />
       </div>
 
-      {/* Soft vignette only — no grid, no heavy color cast */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/20 to-black/55" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.45)_100%)]" />
+      {/* Cosmic color grade — deep space atmosphere over photo */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0a0618]/75 via-[#120a2e]/35 to-[#05030f]/80" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-indigo-950/40 via-transparent to-violet-950/30" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(5,3,15,0.65)_100%)]" />
 
-      {/* Subtle ambient light (very light — keeps photo readable as HD) */}
+      {/* Nebula orbs — multi-layer color blooms */}
+      <div
+        className={`space-nebula space-nebula--a absolute -left-[12%] top-[-5%] h-[55vw] max-h-[620px] w-[55vw] max-w-[620px] rounded-full ${
+          motionOn ? "animate-orb-a" : ""
+        }`}
+        style={parallax(28, 20)}
+      />
+      <div
+        className={`space-nebula space-nebula--b absolute -right-[8%] bottom-[5%] h-[48vw] max-h-[540px] w-[48vw] max-w-[540px] rounded-full ${
+          motionOn ? "animate-orb-b" : ""
+        }`}
+        style={parallax(-24, 18)}
+      />
+      <div
+        className={`space-nebula space-nebula--c absolute left-[30%] top-[35%] h-[32vw] max-h-[380px] w-[32vw] max-w-[380px] rounded-full ${
+          motionOn ? "animate-orb-c" : ""
+        }`}
+        style={parallax(16, -14)}
+      />
+      <div
+        className={`space-nebula space-nebula--d absolute right-[20%] top-[12%] h-[28vw] max-h-[320px] w-[28vw] max-w-[320px] rounded-full ${
+          motionOn ? "animate-orb-a" : ""
+        }`}
+        style={parallax(-12, 22)}
+      />
+
+      {/* Soft milky-way band */}
+      <div
+        className={`space-milkyway absolute left-[-10%] top-[18%] h-[42%] w-[120%] ${
+          motionOn ? "space-milkyway--drift" : ""
+        }`}
+        style={parallax(10, -6)}
+      />
+
+      {/* Cosmic dust clouds */}
+      <div className="absolute inset-0" style={parallax(8, 6)}>
+        {DUST.map((d) => (
+          <span
+            key={d.id}
+            className={`space-dust absolute rounded-full ${
+              motionOn ? "space-dust--float" : ""
+            }`}
+            style={{
+              left: `${d.left}%`,
+              top: `${d.top}%`,
+              width: d.size,
+              height: d.size,
+              opacity: d.opacity,
+              background: `radial-gradient(circle, rgba(${d.hue},0.5) 0%, transparent 70%)`,
+              animationDelay: `${d.delay}s`,
+              animationDuration: `${d.duration}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Cursor cosmic spotlight */}
       {motionOn && (
         <div
-          className="absolute inset-0 opacity-40"
+          className="absolute inset-0 opacity-70"
           style={{
             background: `
               radial-gradient(
-                700px circle at var(--spotlight-x) var(--spotlight-y),
-                rgba(255, 255, 255, 0.08),
+                720px circle at var(--spotlight-x) var(--spotlight-y),
+                rgba(129, 140, 248, 0.22),
                 transparent 55%
+              ),
+              radial-gradient(
+                420px circle at calc(var(--spotlight-x) + 10%) calc(var(--spotlight-y) - 8%),
+                rgba(167, 139, 250, 0.14),
+                transparent 50%
+              ),
+              radial-gradient(
+                280px circle at calc(var(--spotlight-x) - 12%) calc(var(--spotlight-y) + 10%),
+                rgba(56, 189, 248, 0.08),
+                transparent 45%
               )
             `,
           }}
         />
       )}
 
-      {/* Soft stars only (no grid pattern) */}
-      <div className="absolute inset-0" style={parallax(-4, -3)}>
-        {STARS.map((s) => (
+      {/* Far stars (dense, small) */}
+      <div className="absolute inset-0" style={parallax(-3, -2)}>
+        {FAR_STARS.map((s) => (
           <span
             key={s.id}
-            className={`absolute rounded-full bg-white ${
-              motionOn ? "star" : ""
-            }`}
+            className={`absolute rounded-full ${motionOn ? "star" : ""}`}
             style={{
               left: `${s.left}%`,
               top: `${s.top}%`,
-              width: `${s.size}px`,
-              height: `${s.size}px`,
-              opacity: s.opacity * 0.55,
-              boxShadow: `0 0 ${s.size * 2}px rgba(255, 255, 255, 0.5)`,
-              animationDelay: motionOn ? `${s.delay}s` : undefined,
-              animationDuration: motionOn ? `${s.duration}s` : undefined,
+              width: s.size,
+              height: s.size,
+              opacity: s.opacity,
+              background: `rgb(${s.color})`,
+              boxShadow: `0 0 ${s.size * 2.5}px rgba(${s.color},0.7)`,
+              animationDelay: `${s.delay}s`,
+              animationDuration: `${s.duration}s`,
             }}
           />
         ))}
       </div>
 
+      {/* Mid stars */}
+      <div className="absolute inset-0" style={parallax(-8, -5)}>
+        {MID_STARS.map((s) => (
+          <span
+            key={s.id}
+            className={`absolute rounded-full ${motionOn ? "star" : ""}`}
+            style={{
+              left: `${s.left}%`,
+              top: `${s.top}%`,
+              width: s.size,
+              height: s.size,
+              opacity: s.opacity,
+              background: `rgb(${s.color})`,
+              boxShadow: `0 0 ${s.size * 3.5}px rgba(${s.color},0.85)`,
+              animationDelay: `${s.delay}s`,
+              animationDuration: `${s.duration}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Near bright stars + cross flare */}
+      <div className="absolute inset-0" style={parallax(-14, -9)}>
+        {NEAR_STARS.map((s) => (
+          <span
+            key={s.id}
+            className={`space-star-near absolute ${motionOn ? "star" : ""}`}
+            style={{
+              left: `${s.left}%`,
+              top: `${s.top}%`,
+              width: s.size,
+              height: s.size,
+              opacity: s.opacity,
+              background: `rgb(${s.color})`,
+              boxShadow: `
+                0 0 ${s.size * 4}px rgba(${s.color},0.95),
+                0 0 ${s.size * 10}px rgba(${s.color},0.35)
+              `,
+              animationDelay: `${s.delay}s`,
+              animationDuration: `${s.duration}s`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Shooting stars */}
       {motionOn &&
         SHOOTERS.map((s) => (
           <span
@@ -215,12 +366,18 @@ export default function BgScene() {
             style={{
               top: `${s.top}%`,
               left: `${s.left}%`,
-              width: `${s.length}px`,
+              width: s.length,
               animationDelay: `${s.delay}s`,
               animationDuration: `${s.duration}s`,
             }}
           />
         ))}
+
+      {/* Horizon glow (planet atmosphere feel) */}
+      <div className="space-horizon absolute inset-x-0 bottom-0 h-[38%]" />
+
+      {/* Final vignette for readable UI */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30" />
     </div>
   );
 }
