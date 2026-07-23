@@ -8,8 +8,22 @@ import Footer from "@/components/Footer";
 import BackToTop from "@/components/BackToTop";
 import ObjectCard from "@/components/ObjectCard";
 
+function CardSkeleton() {
+  return (
+    <div className="card-glass animate-pulse overflow-hidden">
+      <div className="m-2.5 aspect-[16/10] rounded-2xl bg-white/10" />
+      <div className="space-y-2 px-4 pb-4 pt-3">
+        <div className="h-4 w-1/3 rounded bg-white/10" />
+        <div className="h-5 w-2/3 rounded bg-white/15" />
+        <div className="h-4 w-1/2 rounded bg-white/10" />
+        <div className="mt-2 h-9 w-28 rounded-full bg-white/10" />
+      </div>
+    </div>
+  );
+}
+
 export default function HomePage() {
-  const { objects, stats, ready } = useObjects();
+  const { objects, stats, ready, error, refresh } = useObjects();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
 
@@ -25,6 +39,7 @@ export default function HomePage() {
     const counts = {};
     objects.forEach((o) => {
       const cat = normalizeCategory(o.category);
+      if (!cat) return;
       counts[cat] = (counts[cat] || 0) + 1;
     });
     return counts;
@@ -32,21 +47,44 @@ export default function HomePage() {
 
   const catalog = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const selected = category ? normalizeCategory(category) : "";
+
     return [...objects]
       .filter((obj) => {
-        const objCat = normalizeCategory(obj.category);
-        const matchCat = !category || objCat === category;
+        const objCat = normalizeCategory(obj.category) || "";
+        const matchCat = !selected || objCat === selected;
+        if (!matchCat) return false;
+        if (!q) return true;
         const hay =
           `${obj.name} ${obj.scientificName} ${objCat} ${obj.description}`.toLowerCase();
-        return matchCat && (!q || hay.includes(q));
+        return hay.includes(q);
       })
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   }, [objects, query, category]);
+
+  const hasFilter = Boolean(category || query.trim());
+
+  function selectCategory(cat) {
+    // Klik ulang kategori yang sama = reset filter
+    setCategory((prev) => (prev === cat ? "" : cat));
+    requestAnimationFrame(() => {
+      document.getElementById("catalog")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }
+
+  function clearFilters() {
+    setCategory("");
+    setQuery("");
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
       <main className="flex-1">
+        {/* Hero */}
         <section className="flex min-h-[min(100dvh,900px)] items-center px-4 py-12 sm:py-16 md:min-h-[calc(100vh-72px)] md:py-20">
           <div className="mx-auto max-w-3xl animate-fade-up text-center">
             <h1 className="mb-4 bg-title-gradient bg-clip-text text-3xl font-bold tracking-tight text-transparent xs:text-4xl md:text-6xl">
@@ -91,6 +129,19 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Error banner */}
+        {ready && error && (
+          <div className="px-4">
+            <div className="mx-auto mb-6 flex max-w-6xl flex-wrap items-center justify-between gap-3 rounded-2xl border border-red-400/40 bg-red-500/15 px-4 py-3 text-sm text-red-100">
+              <p>Gagal memuat katalog: {error}</p>
+              <button type="button" className="btn-ghost btn-sm" onClick={() => refresh()}>
+                Coba lagi
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Featured */}
         <section className="scroll-mt-20 px-4 py-12 sm:py-16" id="featured">
           <div className="mx-auto max-w-6xl">
             <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
@@ -98,18 +149,30 @@ export default function HomePage() {
                 <p className="section-eyebrow">Sorotan</p>
                 <h2 className="section-title">Objek Unggulan</h2>
               </div>
-              <a href="#catalog" className="text-sm text-slate-300 hover:text-indigo-200">
+              <a
+                href="#catalog"
+                className="text-sm text-slate-300 hover:text-white"
+              >
                 Lihat semua →
               </a>
             </div>
             <div className="grid grid-cols-1 gap-4 xs:grid-cols-2 sm:gap-5 lg:grid-cols-4">
-              {featured.map((obj) => (
-                <ObjectCard key={obj.id} obj={obj} />
-              ))}
+              {!ready &&
+                Array.from({ length: 4 }).map((_, i) => (
+                  <CardSkeleton key={`feat-sk-${i}`} />
+                ))}
+              {ready &&
+                featured.map((obj) => <ObjectCard key={obj.id} obj={obj} />)}
             </div>
+            {ready && !error && featured.length === 0 && (
+              <p className="py-10 text-center text-sm text-slate-400">
+                Belum ada objek unggulan.
+              </p>
+            )}
           </div>
         </section>
 
+        {/* Categories */}
         <section className="scroll-mt-20 px-4 py-10" id="categories">
           <div className="mx-auto max-w-6xl">
             <div className="mb-6 sm:mb-8">
@@ -117,51 +180,69 @@ export default function HomePage() {
               <h2 className="section-title">Kategori</h2>
             </div>
             <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-4">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  className="card-glass flex min-h-[88px] flex-col items-start gap-2 p-4 text-left sm:p-5"
-                  onClick={() => {
-                    setCategory(cat);
-                    document.getElementById("catalog")?.scrollIntoView({
-                      behavior: "smooth",
-                    });
-                  }}
-                >
-                  <span className="text-sm font-medium text-white">{cat}</span>
-                  <span className="text-xl font-bold text-indigo-300 sm:text-2xl">
-                    {categoryCounts[cat] || 0}
-                  </span>
-                </button>
-              ))}
+              {CATEGORIES.map((cat) => {
+                const active = category === cat;
+                const count = categoryCounts[cat] || 0;
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    aria-pressed={active}
+                    className={`card-glass flex min-h-[88px] flex-col items-start gap-2 p-4 text-left transition sm:p-5 ${
+                      active
+                        ? "border-white/55 ring-2 ring-white/30"
+                        : "hover:border-white/40"
+                    }`}
+                    onClick={() => selectCategory(cat)}
+                  >
+                    <span className="text-sm font-medium text-white">{cat}</span>
+                    <span className="text-xl font-bold text-white sm:text-2xl">
+                      {ready ? count : "—"}
+                    </span>
+                    <span className="text-[11px] text-white/55">
+                      {active ? "Filter aktif · klik lagi untuk hapus" : "Klik untuk filter"}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </section>
 
+        {/* Catalog */}
         <section className="scroll-mt-20 px-4 py-12 sm:py-16" id="catalog">
           <div className="mx-auto max-w-6xl">
-            <div className="mb-6 sm:mb-8">
-              <p className="section-eyebrow">Katalog lengkap</p>
-              <h2 className="section-title">Objek Terbaru</h2>
+            <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="section-eyebrow">Katalog lengkap</p>
+                <h2 className="section-title">Objek Terbaru</h2>
+              </div>
+              {ready && (
+                <p className="text-sm text-white/60">
+                  Menampilkan{" "}
+                  <span className="font-semibold text-white">{catalog.length}</span>{" "}
+                  dari {objects.length} objek
+                  {category ? ` · ${category}` : ""}
+                </p>
+              )}
             </div>
 
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <div className="glass flex min-h-[44px] w-full max-w-md flex-1 items-center gap-2 rounded-full px-4 py-2 focus-within:border-indigo-400/50 focus-within:ring-2 focus-within:ring-indigo-400/20">
+              <div className="glass flex min-h-[44px] w-full max-w-md flex-1 items-center gap-2 rounded-full px-4 py-2 focus-within:border-white/50 focus-within:ring-2 focus-within:ring-white/20">
                 <span className="text-slate-400" aria-hidden="true">
                   ⌕
                 </span>
                 <input
                   type="search"
                   className="w-full bg-transparent text-sm text-white outline-none placeholder:text-slate-400"
-                  placeholder="Cari objek…"
+                  placeholder="Cari nama, kategori, deskripsi…"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   autoComplete="off"
                 />
               </div>
               <select
-                className="glass min-h-[44px] w-full rounded-full px-4 py-2.5 text-sm text-white outline-none focus:border-indigo-400/50 sm:w-auto"
+                className="min-h-[44px] w-full rounded-full border border-white/30 bg-black/55 px-4 py-2.5 text-sm text-white outline-none backdrop-blur-md focus:border-white/50 sm:w-auto"
                 aria-label="Filter berdasarkan kategori"
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -172,24 +253,52 @@ export default function HomePage() {
                 {CATEGORIES.map((c) => (
                   <option key={c} value={c} className="bg-slate-900 text-white">
                     {c}
+                    {ready ? ` (${categoryCounts[c] || 0})` : ""}
                   </option>
                 ))}
               </select>
+              {hasFilter && (
+                <button
+                  type="button"
+                  className="btn-ghost btn-sm w-full sm:w-auto"
+                  onClick={clearFilters}
+                >
+                  Hapus filter
+                </button>
+              )}
             </div>
 
             <div className="grid grid-cols-1 gap-4 xs:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
-              {catalog.map((obj) => (
-                <ObjectCard key={obj.id} obj={obj} />
-              ))}
+              {!ready &&
+                Array.from({ length: 8 }).map((_, i) => (
+                  <CardSkeleton key={`cat-sk-${i}`} />
+                ))}
+              {ready &&
+                catalog.map((obj) => <ObjectCard key={obj.id} obj={obj} />)}
             </div>
-            {catalog.length === 0 && (
-              <p className="py-16 text-center text-sm text-slate-500 dark:text-slate-400">
-                Objek tidak ditemukan.
-              </p>
+
+            {ready && catalog.length === 0 && !error && (
+              <div className="py-14 text-center">
+                <p className="text-sm text-slate-300">
+                  {hasFilter
+                    ? "Tidak ada objek yang cocok dengan filter."
+                    : "Belum ada objek di katalog."}
+                </p>
+                {hasFilter && (
+                  <button
+                    type="button"
+                    className="btn-primary btn-sm mt-4"
+                    onClick={clearFilters}
+                  >
+                    Tampilkan semua objek
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </section>
 
+        {/* About */}
         <section className="scroll-mt-20 px-4 py-12 sm:py-16" id="about">
           <div className="surface mx-auto max-w-4xl rounded-3xl p-6 text-center sm:p-8 md:p-12">
             <p className="section-eyebrow">Tentang Orbitra</p>

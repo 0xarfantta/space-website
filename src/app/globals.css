@@ -131,16 +131,24 @@
         rgba(255, 255, 255, 0.14) 100%
       );
     box-shadow:
-      0 28px 60px rgba(0, 0, 0, 0.4),
-      0 12px 28px rgba(99, 102, 241, 0.15),
+      0 24px 48px rgba(0, 0, 0, 0.38),
+      0 8px 20px rgba(0, 0, 0, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.55),
       inset 0 -1px 0 rgba(255, 255, 255, 0.1);
-    transform: translateY(-6px) scale(1.015);
+    transform: translateY(-4px);
   }
 
+  /* Keep content above glass sheen overlays */
   .card-glass > * {
     position: relative;
     z-index: 3;
+  }
+
+  /* Avoid layout jump on dense grids (category tiles) */
+  @media (prefers-reduced-motion: reduce) {
+    .card-glass:hover {
+      transform: none;
+    }
   }
 
   .navbar-glass {

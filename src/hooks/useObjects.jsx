@@ -55,7 +55,7 @@ export function useObjects() {
       return data.objects || [];
     } catch (err) {
       console.error(err);
-      setError(err.message || "Failed to load");
+      setError(err.message || "Gagal memuat data");
       return [];
     }
   }, []);
