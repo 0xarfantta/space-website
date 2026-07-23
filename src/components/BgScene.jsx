@@ -133,67 +133,60 @@ export default function BgScene() {
         ["--spotlight-y"]: "45%",
       }}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0b061c] via-[#120a2e] to-[#06040f]" />
-
-      {/* Wallpaper — animation class only after mount */}
+      {/* Wallpaper — zoomed out (no crop zoom), sharp HD rendering */}
       <div
-        className={`absolute -inset-[12%] bg-space-photo bg-cover bg-center will-change-transform ${
-          motionOn ? "bg-layer-kenburns" : ""
-        }`}
+        className="absolute inset-0 will-change-transform"
         style={
           motionOn
             ? {
                 transform:
-                  "translate3d(calc(var(--mx) * -18px), calc(var(--my) * -14px), 0) scale(1.12)",
+                  "translate3d(calc(var(--mx) * -8px), calc(var(--my) * -6px), 0)",
               }
-            : { transform: "scale(1.08)" }
+            : undefined
         }
-      />
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/images/space-bg.jpg"
+          alt=""
+          decoding="async"
+          fetchPriority="high"
+          className="h-full w-full object-cover object-center"
+          style={{
+            /* Full-viewport HD photo; no extra scale-up (zoom out vs old 1.12x) */
+            objectFit: "cover",
+            objectPosition: "center center",
+            transform: "scale(1)",
+            transformOrigin: "center center",
+            imageRendering: "auto",
+            WebkitBackfaceVisibility: "hidden",
+            backfaceVisibility: "hidden",
+          }}
+        />
+      </div>
 
-      <div className="bg-scene-veil absolute inset-0 bg-gradient-to-b from-white/75 via-slate-100/65 to-indigo-50/70 opacity-0 transition-opacity duration-300" />
+      {/* Soft vignette only — no grid, no heavy color cast */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/20 to-black/55" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.45)_100%)]" />
 
+      {/* Subtle ambient light (very light — keeps photo readable as HD) */}
       {motionOn && (
         <div
-          className="absolute inset-0 opacity-90"
+          className="absolute inset-0 opacity-40"
           style={{
             background: `
               radial-gradient(
-                600px circle at var(--spotlight-x) var(--spotlight-y),
-                rgba(129, 140, 248, 0.28),
+                700px circle at var(--spotlight-x) var(--spotlight-y),
+                rgba(255, 255, 255, 0.08),
                 transparent 55%
-              ),
-              radial-gradient(
-                420px circle at calc(var(--spotlight-x) + 8%) calc(var(--spotlight-y) - 6%),
-                rgba(167, 139, 250, 0.18),
-                transparent 50%
               )
             `,
           }}
         />
       )}
 
-      {/* Nebula orbs */}
-      <div
-        className={`absolute -left-16 top-[8%] h-[48vw] max-h-[560px] w-[48vw] max-w-[560px] rounded-full bg-indigo-500/25 blur-[100px] ${
-          motionOn ? "animate-orb-a" : ""
-        }`}
-        style={parallax(24, 18)}
-      />
-      <div
-        className={`absolute -right-10 bottom-[10%] h-[42vw] max-h-[500px] w-[42vw] max-w-[500px] rounded-full bg-violet-500/20 blur-[100px] ${
-          motionOn ? "animate-orb-b" : ""
-        }`}
-        style={parallax(-20, 22)}
-      />
-      <div
-        className={`absolute left-[35%] top-[42%] h-[30vw] max-h-[360px] w-[30vw] max-w-[360px] rounded-full bg-fuchsia-400/15 blur-[90px] ${
-          motionOn ? "animate-orb-c" : ""
-        }`}
-        style={parallax(14, -16)}
-      />
-
-      {/* Stars — static on SSR / first paint; animate only after mount */}
-      <div className="absolute inset-0" style={parallax(-8, -6)}>
+      {/* Soft stars only (no grid pattern) */}
+      <div className="absolute inset-0" style={parallax(-4, -3)}>
         {STARS.map((s) => (
           <span
             key={s.id}
@@ -205,8 +198,8 @@ export default function BgScene() {
               top: `${s.top}%`,
               width: `${s.size}px`,
               height: `${s.size}px`,
-              opacity: s.opacity,
-              boxShadow: `0 0 ${s.size * 3}px rgba(199, 210, 254, 0.85)`,
+              opacity: s.opacity * 0.55,
+              boxShadow: `0 0 ${s.size * 2}px rgba(255, 255, 255, 0.5)`,
               animationDelay: motionOn ? `${s.delay}s` : undefined,
               animationDuration: motionOn ? `${s.duration}s` : undefined,
             }}
@@ -214,7 +207,6 @@ export default function BgScene() {
         ))}
       </div>
 
-      {/* Shooting stars only after mount (avoid SSR/client tree mismatch) */}
       {motionOn &&
         SHOOTERS.map((s) => (
           <span
@@ -229,24 +221,6 @@ export default function BgScene() {
             }}
           />
         ))}
-
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(5,3,16,0.55)_100%)]" />
-
-      <div
-        className="absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(165,180,252,0.35) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(165,180,252,0.35) 1px, transparent 1px)
-          `,
-          backgroundSize: "64px 64px",
-          maskImage:
-            "radial-gradient(ellipse at center, black 20%, transparent 75%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse at center, black 20%, transparent 75%)",
-          ...parallax(6, 6),
-        }}
-      />
     </div>
   );
 }
