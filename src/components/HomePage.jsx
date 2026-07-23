@@ -121,7 +121,7 @@ export default function HomePage() {
                 <button
                   key={cat}
                   type="button"
-                  className="glass flex min-h-[88px] flex-col items-start gap-2 rounded-2xl p-4 text-left transition hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/[0.14] sm:p-5"
+                  className="card-glass flex min-h-[88px] flex-col items-start gap-2 p-4 text-left sm:p-5"
                   onClick={() => {
                     setCategory(cat);
                     document.getElementById("catalog")?.scrollIntoView({
@@ -204,50 +204,50 @@ export default function HomePage() {
             </p>
 
             <div className="mt-10 grid grid-cols-1 gap-6 text-left sm:grid-cols-2 lg:grid-cols-4">
-              <div className="surface-soft rounded-2xl p-5 transition hover:border-white/30 hover:bg-white/[0.12]">
+              <div className="card-glass p-5">
                 <h3 className="text-base font-semibold text-white drop-shadow-sm">
                   Jelajah & Cari
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-200">
+                <p className="mt-2 text-sm leading-relaxed text-white/75">
                   Temukan planet, bintang, galaksi, atau nebula dengan pencarian
                   langsung dan filter kategori yang responsif.
                 </p>
               </div>
-              <div className="surface-soft rounded-2xl p-5 transition hover:border-white/30 hover:bg-white/[0.12]">
+              <div className="card-glass p-5">
                 <h3 className="text-base font-semibold text-white drop-shadow-sm">
                   Peta Tata Surya
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-200">
+                <p className="mt-2 text-sm leading-relaxed text-white/75">
                   Visual orbit interaktif dari Merkurius hingga Neptunus — klik
                   planet untuk info & tautan katalog.
                 </p>
                 <a
                   href="/solar-system"
-                  className="mt-3 inline-block text-sm font-medium text-indigo-300 hover:text-indigo-200"
+                  className="mt-3 inline-block text-sm font-medium text-white/90 underline-offset-2 hover:underline"
                 >
                   Buka peta →
                 </a>
               </div>
-              <div className="surface-soft rounded-2xl p-5 transition hover:border-white/30 hover:bg-white/[0.12]">
+              <div className="card-glass p-5">
                 <h3 className="text-base font-semibold text-white drop-shadow-sm">
                   Bandingkan Objek
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-200">
+                <p className="mt-2 text-sm leading-relaxed text-white/75">
                   Bandingkan dua benda langit berdampingan: diameter, massa,
                   gravitasi, suhu, dan lainnya.
                 </p>
                 <a
                   href="/compare"
-                  className="mt-3 inline-block text-sm font-medium text-indigo-300 hover:text-indigo-200"
+                  className="mt-3 inline-block text-sm font-medium text-white/90 underline-offset-2 hover:underline"
                 >
                   Mulai bandingkan →
                 </a>
               </div>
-              <div className="surface-soft rounded-2xl p-5 transition hover:border-white/30 hover:bg-white/[0.12]">
+              <div className="card-glass p-5">
                 <h3 className="text-base font-semibold text-white drop-shadow-sm">
                   Kelola Katalog
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-200">
+                <p className="mt-2 text-sm leading-relaxed text-white/75">
                   Admin dapat menambah, mengedit, atau menghapus objek dari panel
                   kontrol agar katalog tetap mutakhir.
                 </p>
