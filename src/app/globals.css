@@ -252,6 +252,10 @@
     @apply relative min-h-screen text-white;
   }
 
+  .admin-shell :where(h1, h2, h3, h4, p, span, td, th, label, strong, a) {
+    @apply text-white;
+  }
+
   .admin-sidebar {
     @apply border-r border-white/20 bg-slate-950/95 text-white shadow-glass-dark backdrop-blur-2xl;
   }
@@ -275,31 +279,31 @@
   }
 
   .admin-subtitle {
-    @apply text-sm leading-relaxed text-slate-200;
+    @apply text-sm leading-relaxed text-white;
   }
 
   .admin-muted {
-    @apply text-sm text-slate-200;
+    @apply text-sm text-white;
   }
 
   .admin-faint {
-    @apply text-xs text-slate-300;
+    @apply text-xs text-white/90;
   }
 
   .admin-label {
-    @apply flex flex-col gap-2 text-sm font-medium text-slate-100;
+    @apply flex flex-col gap-2 text-sm font-medium text-white;
   }
 
   .admin-input {
-    @apply w-full rounded-xl border border-white/25 bg-black/45 px-4 py-3 text-sm font-normal text-white outline-none backdrop-blur-md transition placeholder:text-slate-400 focus:border-indigo-400/70 focus:bg-black/55 focus:ring-2 focus:ring-indigo-400/25;
+    @apply w-full rounded-xl border border-white/25 bg-black/45 px-4 py-3 text-sm font-normal text-white outline-none backdrop-blur-md transition placeholder:text-white/50 focus:border-indigo-400/70 focus:bg-black/55 focus:ring-2 focus:ring-indigo-400/25;
   }
 
   .admin-search {
-    @apply flex min-h-[44px] items-center gap-2 rounded-full border border-white/25 bg-black/45 px-3 py-1.5;
+    @apply flex min-h-[44px] items-center gap-2 rounded-full border border-white/25 bg-black/45 px-3 py-1.5 text-white;
   }
 
   .admin-nav-link {
-    @apply flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-100 transition hover:bg-white/10 hover:text-white;
+    @apply flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-white transition hover:bg-white/10 hover:text-white;
   }
 
   .admin-chip {
@@ -307,11 +311,11 @@
   }
 
   .admin-table-head {
-    @apply border-b border-white/15 text-left text-xs font-semibold uppercase tracking-wide text-slate-300;
+    @apply border-b border-white/15 text-left text-xs font-semibold uppercase tracking-wide text-white;
   }
 
   .admin-table-cell {
-    @apply px-3 py-3 text-sm text-slate-100;
+    @apply px-3 py-3 text-sm text-white;
   }
 
   .admin-icon-btn {

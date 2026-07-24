@@ -118,8 +118,8 @@ export default function DashboardPage() {
           >
             <span aria-hidden="true">🪐</span>
             {!collapsed && (
-              <span className="md:inline">
-                Orbit<span className="text-indigo-300">ra</span>
+              <span className="md:inline text-white">
+                Orbit<span className="text-white">ra</span>
               </span>
             )}
           </Link>
@@ -146,22 +146,22 @@ export default function DashboardPage() {
                 }
               }}
             >
-              <span className="w-6 text-center text-indigo-200">{item.icon}</span>
-              {!collapsed && <span>{item.label}</span>}
+              <span className="w-6 text-center text-white">{item.icon}</span>
+              {!collapsed && <span className="text-white">{item.label}</span>}
             </a>
           ))}
           <button
             type="button"
             title="Keluar admin dan buka situs publik"
-            className="admin-nav-link w-full text-left"
+            className="admin-nav-link w-full text-left text-white"
             onClick={async () => {
               // Keluar session admin agar di situs publik tidak bisa edit lagi
               await logout();
               router.push("/");
             }}
           >
-            <span className="w-6 text-center text-indigo-200">←</span>
-            {!collapsed && <span>Ke Situs Publik</span>}
+            <span className="w-6 text-center text-white">←</span>
+            {!collapsed && <span className="text-white">Ke Situs Publik</span>}
           </button>
         </nav>
       </aside>
@@ -188,7 +188,7 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full border border-indigo-300/40 bg-indigo-500/25 px-3 py-1 text-xs font-semibold text-indigo-100">
+            <span className="rounded-full border border-white/30 bg-white/10 px-3 py-1 text-xs font-semibold text-white">
               {session?.username || "admin"}
             </span>
             <Link href="/add-object" className="btn-primary btn-sm">
@@ -255,12 +255,12 @@ export default function DashboardPage() {
               <h2 className="admin-title text-lg">Semua Objek</h2>
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                 <div className="admin-search">
-                  <span className="text-slate-300" aria-hidden="true">
+                  <span className="text-white" aria-hidden="true">
                     ⌕
                   </span>
                   <input
                     type="search"
-                    className="w-full min-w-0 bg-transparent text-sm font-medium text-white outline-none placeholder:text-slate-400 sm:w-44"
+                    className="w-full min-w-0 bg-transparent text-sm font-medium text-white outline-none placeholder:text-white/50 sm:w-44"
                     placeholder="Cari…"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
@@ -318,10 +318,10 @@ export default function DashboardPage() {
                       <td className="admin-table-cell">
                         <span className="badge">{obj.category}</span>
                       </td>
-                      <td className="admin-table-cell text-slate-200">
+                      <td className="admin-table-cell text-white">
                         {obj.distance || "—"}
                       </td>
-                      <td className="admin-table-cell text-slate-200">
+                      <td className="admin-table-cell text-white">
                         {obj.yearDiscovered || "—"}
                       </td>
                       <td className="admin-table-cell text-right">
@@ -369,7 +369,7 @@ export default function DashboardPage() {
                       <p className="admin-faint mt-0.5">{obj.category}</p>
                     </div>
                   </div>
-                  <div className="mb-3 space-y-1 text-sm text-slate-200">
+                  <div className="mb-3 space-y-1 text-sm text-white">
                     <p>Jarak: {obj.distance || "—"}</p>
                     <p>Tahun: {obj.yearDiscovered || "—"}</p>
                   </div>
@@ -393,7 +393,7 @@ export default function DashboardPage() {
             </div>
 
             {filtered.length === 0 && (
-              <p className="py-10 text-center text-sm font-medium text-slate-300">
+              <p className="py-10 text-center text-sm font-medium text-white">
                 Objek tidak ditemukan.
               </p>
             )}
@@ -407,8 +407,8 @@ export default function DashboardPage() {
             <div className="flex flex-wrap gap-2 sm:gap-3">
               {CATEGORIES.map((cat) => (
                 <div key={cat} className="admin-chip">
-                  <span className="text-slate-100">{cat}</span>
-                  <strong className="text-indigo-300">
+                  <span className="text-white">{cat}</span>
+                  <strong className="text-white">
                     {stats.categoryCount?.[cat] || 0}
                   </strong>
                 </div>
