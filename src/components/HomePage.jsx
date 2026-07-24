@@ -87,7 +87,7 @@ export default function HomePage() {
         {/* Hero */}
         <section className="flex min-h-[min(100dvh,900px)] items-center px-4 py-12 sm:py-16 md:min-h-[calc(100vh-72px)] md:py-20">
           <div className="mx-auto max-w-3xl animate-fade-up text-center">
-            <h1 className="mb-4 bg-title-gradient bg-clip-text text-3xl font-bold tracking-tight text-transparent xs:text-4xl md:text-6xl">
+            <h1 className="mb-4 text-3xl font-bold tracking-tight text-white xs:text-4xl md:text-6xl">
               Jelajahi Alam Semesta
             </h1>
             <p className="mx-auto mb-8 max-w-xl text-sm text-slate-200/95 sm:text-base md:text-lg">
