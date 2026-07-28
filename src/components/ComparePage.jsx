@@ -246,21 +246,21 @@ export default function ComparePage() {
                     <h2 className="text-lg font-semibold text-white">
                       Tabel perbandingan
                     </h2>
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-white/70">
                       Baris disorot jika nilainya berbeda
                     </p>
                   </div>
                   <div className="overflow-x-auto">
                     <table className="w-full min-w-[640px] text-left text-sm">
                       <thead>
-                        <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-slate-400">
+                        <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-white/80">
                           <th className="px-4 py-3 font-semibold sm:px-5">
                             Properti
                           </th>
-                          <th className="px-4 py-3 font-semibold text-indigo-200 sm:px-5">
+                          <th className="px-4 py-3 font-semibold text-white sm:px-5">
                             {objA.name}
                           </th>
-                          <th className="px-4 py-3 font-semibold text-violet-200 sm:px-5">
+                          <th className="px-4 py-3 font-semibold text-white sm:px-5">
                             {objB.name}
                           </th>
                         </tr>
@@ -278,7 +278,7 @@ export default function ComparePage() {
                                 diff ? "bg-indigo-500/10" : ""
                               }`}
                             >
-                              <td className="px-4 py-3 font-medium text-slate-300 sm:px-5">
+                              <td className="px-4 py-3 font-medium text-white sm:px-5">
                                 {label}
                                 {diff && (
                                   <span className="ml-2 text-[10px] font-semibold uppercase text-indigo-300">
@@ -286,10 +286,10 @@ export default function ComparePage() {
                                   </span>
                                 )}
                               </td>
-                              <td className="px-4 py-3 text-slate-100 sm:px-5">
+                              <td className="px-4 py-3 text-white sm:px-5">
                                 {va}
                               </td>
-                              <td className="px-4 py-3 text-slate-100 sm:px-5">
+                              <td className="px-4 py-3 text-white sm:px-5">
                                 {vb}
                               </td>
                             </tr>
