@@ -275,13 +275,13 @@ export default function ComparePage() {
                             <tr
                               key={key}
                               className={`border-b border-white/5 ${
-                                diff ? "bg-indigo-500/10" : ""
+                                diff ? "bg-white/5" : ""
                               }`}
                             >
                               <td className="px-4 py-3 font-medium text-white sm:px-5">
                                 {label}
                                 {diff && (
-                                  <span className="ml-2 text-[10px] font-semibold uppercase text-indigo-300">
+                                  <span className="ml-2 text-[10px] font-semibold uppercase text-white/50">
                                     beda
                                   </span>
                                 )}
