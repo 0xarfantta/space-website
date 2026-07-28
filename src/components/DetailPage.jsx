@@ -114,7 +114,7 @@ export default function DetailPage() {
                 ].map(([label, value], i) => (
                   <div
                     key={label}
-                    className="detail-meta-card rounded-xl border border-white/20 bg-black/35 p-3.5 backdrop-blur-md"
+                    className="detail-meta-card rounded-xl border border-white/20 bg-white/5 p-3.5 backdrop-blur-md"
                     style={{ animationDelay: `${0.15 + i * 0.05}s` }}
                   >
                     <span className="mb-1 block text-[0.7rem] font-semibold uppercase tracking-wide text-indigo-200/90">
@@ -127,7 +127,7 @@ export default function DetailPage() {
                 ))}
               </div>
 
-              <div className="mt-6 rounded-xl border border-white/15 bg-black/30 p-4 backdrop-blur-md">
+              <div className="mt-6 rounded-xl border border-white/15 bg-white/5 p-4 backdrop-blur-md">
                 <p className="mb-2 text-[0.7rem] font-semibold uppercase tracking-wide text-indigo-200/90">
                   Deskripsi
                 </p>

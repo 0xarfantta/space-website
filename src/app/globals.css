@@ -242,9 +242,22 @@
     @apply text-slate-400;
   }
 
-  /* Detail page content panel — high contrast over busy space BG */
+  /* Detail page content panel — glassmorphism like other cards */
   .detail-content-panel {
-    @apply border border-white/20 bg-black/55 shadow-glass-dark backdrop-blur-2xl;
+    @apply border border-white/30;
+    background:
+      linear-gradient(
+        155deg,
+        rgba(255, 255, 255, 0.16) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0.1) 100%
+      );
+    -webkit-backdrop-filter: blur(28px) saturate(170%);
+    backdrop-filter: blur(28px) saturate(170%);
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.06);
   }
 
   /* ---------- Admin UI — solid panels + readable type over space BG ---------- */
@@ -574,7 +587,7 @@
 .detail-meta-card:hover {
   transform: translateY(-2px);
   border-color: rgba(165, 180, 252, 0.55);
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .detail-image-wrap {
