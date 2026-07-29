@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   SOLAR_SYSTEM_BODIES,
@@ -16,17 +17,44 @@ const VIEW = 760;
 const CX = VIEW / 2;
 const CY = VIEW / 2;
 
+const SPACE_BG =
+  "radial-gradient(circle at 50% 50%, rgba(30,27,75,0.9) 0%, #020617 100%)";
+
+// three.js hanya berjalan di browser dan cukup besar — dimuat terpisah agar
+// tidak ikut ke bundle awal halaman.
+const SolarSystemScene = dynamic(
+  () => import("@/components/SolarSystemScene"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex h-full w-full items-center justify-center text-sm text-slate-400">
+        Memuat peta 3D…
+      </div>
+    ),
+  }
+);
+
 export default function SolarSystemMap() {
   const { objects, ready } = useObjects();
   const [selectedKey, setSelectedKey] = useState("earth");
   const [paused, setPaused] = useState(false);
   const [showLabels, setShowLabels] = useState(true);
   const [includePluto, setIncludePluto] = useState(true);
+  const [mode, setMode] = useState("3d");
+  const [webglFailed, setWebglFailed] = useState(false);
+
+  // WebGL yang tidak tersedia mengunci tampilan ke 2D
+  const view = webglFailed ? "2d" : mode;
+
+  const handleUnsupported = useCallback(() => setWebglFailed(true), []);
 
   const bodies = useMemo(
     () => SOLAR_SYSTEM_BODIES.filter((b) => includePluto || b.key !== "pluto"),
     [includePluto]
   );
+
+  // Identitas array dijaga stabil — scene 3D memakainya sebagai dependency efek
+  const visibleKeys = useMemo(() => bodies.map((b) => b.key), [bodies]);
 
   const selected = useMemo(
     () => bodies.find((b) => b.key === selectedKey) || bodies[0],
@@ -53,6 +81,16 @@ export default function SolarSystemMap() {
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
+              {!webglFailed && (
+                <button
+                  type="button"
+                  className="btn-ghost btn-sm"
+                  onClick={() => setMode((m) => (m === "3d" ? "2d" : "3d"))}
+                  aria-pressed={view === "3d"}
+                >
+                  {view === "3d" ? "Tampilan 2D" : "Tampilan 3D"}
+                </button>
+              )}
               <button
                 type="button"
                 className="btn-ghost btn-sm"
@@ -80,9 +118,19 @@ export default function SolarSystemMap() {
           <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
             <div className="surface relative overflow-hidden rounded-3xl p-2 sm:p-4">
               <div
-                className="relative mx-auto w-full max-w-[720px]"
-                style={{ aspectRatio: "1 / 1" }}
+                className="relative mx-auto w-full max-w-[720px] overflow-hidden rounded-3xl"
+                style={{ aspectRatio: "1 / 1", background: SPACE_BG }}
               >
+                {view === "3d" ? (
+                  <SolarSystemScene
+                    visibleKeys={visibleKeys}
+                    selectedKey={selectedKey}
+                    onSelect={setSelectedKey}
+                    paused={paused}
+                    showLabels={showLabels}
+                    onUnsupported={handleUnsupported}
+                  />
+                ) : (
                 <svg
                   viewBox={`0 0 ${VIEW} ${VIEW}`}
                   className="h-full w-full"
@@ -269,9 +317,14 @@ export default function SolarSystemMap() {
                       );
                     })}
                 </svg>
+                )}
               </div>
-              <p className="px-2 pb-2 text-center text-[11px] text-slate-500">
-                Skala jarak & ukuran disederhanakan ·{" "}
+              <p className="px-2 pb-2 pt-2 text-center text-[11px] text-slate-500">
+                {webglFailed
+                  ? "WebGL tidak tersedia di perangkat ini — menampilkan versi 2D · "
+                  : view === "3d"
+                    ? "Seret untuk memutar, scroll untuk zoom, klik planet untuk info · "
+                    : "Skala jarak & ukuran disederhanakan · "}
                 {ready
                   ? `${objects.length} objek di katalog`
                   : "Memuat katalog…"}
