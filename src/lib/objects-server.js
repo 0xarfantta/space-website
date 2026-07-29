@@ -1,9 +1,51 @@
-import { prisma } from "@/lib/prisma";
 import {
   CATEGORY_LEGACY_MAP,
   normalizeCategory,
   SEED_OBJECTS,
 } from "@/lib/data";
+
+// ---------------------------------------------------------------------------
+// SKIP_DB mode: When true, serve data from SEED_OBJECTS (no Prisma / SQLite).
+// Used for Vercel deployment where SQLite is not available.
+// ---------------------------------------------------------------------------
+const SKIP_DB = process.env.SKIP_DB === "true";
+
+// Only import prisma when we actually need it (avoids build errors on Vercel)
+let prisma = null;
+if (!SKIP_DB) {
+  prisma = (await import("@/lib/prisma")).prisma;
+}
+
+// ---------------------------------------------------------------------------
+// Static (in-memory) helpers — used when SKIP_DB is true
+// ---------------------------------------------------------------------------
+
+/** Turn a SEED_OBJECTS item into the same shape the API returns */
+function seedToSerialized(item) {
+  const now = new Date().toISOString();
+  return {
+    id: item.id,
+    name: item.name,
+    scientificName: item.scientificName || item.name,
+    category: item.category || "Planet",
+    diameter: item.diameter || "",
+    mass: item.mass || "",
+    gravity: item.gravity || "",
+    temperature: item.temperature || "",
+    distance: item.distance || "",
+    yearDiscovered: item.yearDiscovered || "",
+    imageUrl: item.imageUrl || "",
+    description: item.description || "",
+    createdAt: item.createdAt || now,
+    updatedAt: item.updatedAt || now,
+  };
+}
+
+const READ_ONLY_ERROR = "Mode baca-saja — database tidak tersedia di deployment ini.";
+
+// ---------------------------------------------------------------------------
+// Shared helpers
+// ---------------------------------------------------------------------------
 
 /** Serialize Prisma row for JSON / frontend */
 export function serializeObject(row) {
@@ -63,6 +105,10 @@ export function getStats(objects) {
   };
 }
 
+// ---------------------------------------------------------------------------
+// DB-backed helpers (only used when SKIP_DB is false)
+// ---------------------------------------------------------------------------
+
 /** Map seed item → Prisma create input (preserve seed ids) */
 function seedToCreateInput(item) {
   return {
@@ -88,6 +134,7 @@ function seedToCreateInput(item) {
  * Safe to run on every list/get — only touches legacy values.
  */
 export async function migrateLegacyCategories() {
+  if (SKIP_DB) return;
   const entries = Object.entries(CATEGORY_LEGACY_MAP);
   for (const [from, to] of entries) {
     if (from === to) continue;
@@ -100,6 +147,7 @@ export async function migrateLegacyCategories() {
 
 /** If DB empty, insert catalog seed. Also migrates legacy category names. */
 export async function ensureSeeded() {
+  if (SKIP_DB) return { seeded: false, count: SEED_OBJECTS.length };
   const count = await prisma.celestialObject.count();
   if (count === 0) {
     await prisma.celestialObject.createMany({
@@ -113,7 +161,14 @@ export async function ensureSeeded() {
   return { seeded: false, count };
 }
 
+// ---------------------------------------------------------------------------
+// Public API
+// ---------------------------------------------------------------------------
+
 export async function listObjects() {
+  if (SKIP_DB) {
+    return SEED_OBJECTS.map(seedToSerialized);
+  }
   await ensureSeeded();
   const rows = await prisma.celestialObject.findMany({
     orderBy: { createdAt: "desc" },
@@ -122,12 +177,17 @@ export async function listObjects() {
 }
 
 export async function getObjectById(id) {
+  if (SKIP_DB) {
+    const item = SEED_OBJECTS.find((obj) => obj.id === id);
+    return item ? seedToSerialized(item) : null;
+  }
   await ensureSeeded();
   const row = await prisma.celestialObject.findUnique({ where: { id } });
   return serializeObject(row);
 }
 
 export async function createObject(data) {
+  if (SKIP_DB) throw new Error(READ_ONLY_ERROR);
   const row = await prisma.celestialObject.create({
     data: {
       name: data.name,
@@ -147,6 +207,7 @@ export async function createObject(data) {
 }
 
 export async function updateObject(id, data) {
+  if (SKIP_DB) throw new Error(READ_ONLY_ERROR);
   try {
     const row = await prisma.celestialObject.update({
       where: { id },
@@ -171,6 +232,7 @@ export async function updateObject(id, data) {
 }
 
 export async function deleteObject(id) {
+  if (SKIP_DB) throw new Error(READ_ONLY_ERROR);
   try {
     await prisma.celestialObject.delete({ where: { id } });
     return true;
@@ -180,6 +242,7 @@ export async function deleteObject(id) {
 }
 
 export async function resetToSeed() {
+  if (SKIP_DB) throw new Error(READ_ONLY_ERROR);
   await prisma.celestialObject.deleteMany();
   await prisma.celestialObject.createMany({
     data: SEED_OBJECTS.map(seedToCreateInput),

@@ -14,6 +14,10 @@ const nextConfig = {
       },
     ],
   },
+  // Make SKIP_DB available at build time for conditional Prisma imports
+  env: {
+    SKIP_DB: process.env.SKIP_DB || "false",
+  },
 };
 
 export default nextConfig;
