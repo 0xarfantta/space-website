@@ -363,23 +363,6 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="mt-8 flex flex-wrap justify-center gap-2">
-              {[
-                "Katalog Benda Langit",
-                "Peta Tata Surya",
-                "Bandingkan Objek",
-                "Pencarian Langsung",
-                "Properti Fisik",
-                "Panel Admin",
-              ].map((t) => (
-                <span
-                  key={t}
-                  className="glass rounded-full px-3.5 py-1.5 text-xs font-medium text-slate-100 sm:px-4"
-                >
-                  {t}
-                </span>
-              ))}
-            </div>
           </div>
         </section>
       </main>
