@@ -2,13 +2,14 @@
 // When SKIP_DB=true (e.g. Vercel without a database), this module exports
 // a null prisma client. The objects-server layer handles the fallback.
 
+import { PrismaClient } from "@prisma/client";
+
 const SKIP_DB = process.env.SKIP_DB === "true";
 
 /** @type {import("@prisma/client").PrismaClient | null} */
 let prisma = null;
 
 if (!SKIP_DB) {
-  const { PrismaClient } = await import("@prisma/client");
   const globalForPrisma = globalThis;
 
   prisma =

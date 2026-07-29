@@ -3,18 +3,13 @@ import {
   normalizeCategory,
   SEED_OBJECTS,
 } from "@/lib/data";
+import { prisma } from "@/lib/prisma";
 
 // ---------------------------------------------------------------------------
 // SKIP_DB mode: When true, serve data from SEED_OBJECTS (no Prisma / SQLite).
 // Used for Vercel deployment where SQLite is not available.
 // ---------------------------------------------------------------------------
 const SKIP_DB = process.env.SKIP_DB === "true";
-
-// Only import prisma when we actually need it (avoids build errors on Vercel)
-let prisma = null;
-if (!SKIP_DB) {
-  prisma = (await import("@/lib/prisma")).prisma;
-}
 
 // ---------------------------------------------------------------------------
 // Static (in-memory) helpers — used when SKIP_DB is true
