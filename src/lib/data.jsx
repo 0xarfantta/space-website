@@ -56,7 +56,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "—",
     imageUrl: "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=800&q=80",
     description:
-      "Earth is the third planet from the Sun and the only astronomical object known to harbor life. About 71% of its surface is covered by water.",
+      "Bumi adalah planet ketiga dari Matahari dan satu-satunya objek astronomi yang diketahui mendukung kehidupan. Sekitar 71% permukaannya tertutup oleh air.",
     createdAt: "2024-01-01T00:00:00.000Z",
     updatedAt: "2024-01-01T00:00:00.000Z",
   },
@@ -73,7 +73,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "—",
     imageUrl: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=800&q=80",
     description:
-      "Mars is the fourth planet from the Sun, often called the Red Planet due to iron oxide on its surface. It has the tallest volcano and deepest canyon in the solar system.",
+      "Mars adalah planet keempat dari Matahari, sering disebut Planet Merah karena kandungan besi oksida di permukaannya. Planet ini memiliki gunung berapi tertinggi dan ngarai terdalam di tata surya.",
     createdAt: "2024-01-02T00:00:00.000Z",
     updatedAt: "2024-01-02T00:00:00.000Z",
   },
@@ -90,7 +90,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "—",
     imageUrl: "https://images.unsplash.com/photo-1630839437035-dac17da580d0?w=800&q=80",
     description:
-      "Jupiter is the largest planet in the Solar System — a gas giant with a Great Red Spot storm larger than Earth and dozens of moons.",
+      "Jupiter adalah planet terbesar di Tata Surya — raksasa gas dengan badai Bintik Merah Raksasa yang lebih besar dari Bumi dan memiliki lusinan bulan.",
     createdAt: "2024-01-03T00:00:00.000Z",
     updatedAt: "2024-01-03T00:00:00.000Z",
   },
@@ -107,7 +107,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "—",
     imageUrl: "https://images.unsplash.com/photo-1575881875475-31023242e3f9?w=800&q=80",
     description:
-      "The Sun is a G-type main-sequence star at the center of our Solar System. It accounts for about 99.86% of the system's total mass.",
+      "Matahari adalah bintang deret utama tipe-G di pusat Tata Surya kita. Matahari menyusun sekitar 99,86% dari total massa tata surya.",
     createdAt: "2024-01-04T00:00:00.000Z",
     updatedAt: "2024-01-04T00:00:00.000Z",
   },
@@ -124,7 +124,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "964 (recorded)",
     imageUrl: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&q=80",
     description:
-      "Andromeda is the nearest major galaxy to the Milky Way and the largest galaxy in the Local Group. It is approaching us and will eventually merge with the Milky Way.",
+      "Andromeda adalah galaksi spiral besar terdekat dari Bimasakti dan merupakan galaksi terbesar di Grup Lokal. Galaksi ini bergerak mendekati kita dan pada akhirnya akan menyatu dengan Bimasakti.",
     createdAt: "2024-01-05T00:00:00.000Z",
     updatedAt: "2024-01-05T00:00:00.000Z",
   },
@@ -141,7 +141,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "Ancient",
     imageUrl: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=800&q=80",
     description:
-      "The Milky Way is a barred spiral galaxy that contains our Solar System. It holds hundreds of billions of stars and a supermassive black hole at its center.",
+      "Bimasakti adalah galaksi spiral berpalang yang memuat Tata Surya kita. Galaksi ini menampung ratusan miliar bintang dan sebuah lubang hitam supermasif di pusatnya.",
     createdAt: "2024-01-06T00:00:00.000Z",
     updatedAt: "2024-01-06T00:00:00.000Z",
   },
@@ -158,7 +158,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "Ancient",
     imageUrl: "https://images.unsplash.com/photo-1543722530-d2c3201371e7?w=800&q=80",
     description:
-      "Betelgeuse is a red supergiant in the constellation Orion. It is one of the largest stars visible to the naked eye and may explode as a supernova in the future.",
+      "Betelgeuse adalah bintang superraksasa merah di rasi bintang Orion. Bintang ini merupakan salah satu bintang terbesar yang terlihat dengan mata telanjang dan diperkirakan akan meledak sebagai supernova di masa depan.",
     createdAt: "2024-01-07T00:00:00.000Z",
     updatedAt: "2024-01-07T00:00:00.000Z",
   },
@@ -175,7 +175,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1610",
     imageUrl: "https://images.unsplash.com/photo-1506443432602-ac2fcd6f54e0?w=800&q=80",
     description:
-      "The Orion Nebula is a diffuse nebula south of Orion's Belt. It is one of the brightest nebulae and the closest region of massive star formation to Earth.",
+      "Nebula Orion adalah nebula difus di sebelah selatan Sabuk Orion. Ini adalah salah satu nebula paling terang dan merupakan wilayah pembentukan bintang masif terdekat dari Bumi.",
     createdAt: "2024-01-08T00:00:00.000Z",
     updatedAt: "2024-01-08T00:00:00.000Z",
   },
@@ -192,7 +192,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1974 (radio source)",
     imageUrl: "https://images.unsplash.com/photo-1464802686167-b939a6910659?w=800&q=80",
     description:
-      "Sagittarius A* is the supermassive black hole at the center of the Milky Way. Its existence was confirmed by stellar orbits and Event Horizon Telescope imaging.",
+      "Sagittarius A* adalah lubang hitam supermasif di pusat galaksi Bimasakti. Keberadaannya dikonfirmasi melalui pengamatan orbit bintang dan citra dari Event Horizon Telescope.",
     createdAt: "2024-01-09T00:00:00.000Z",
     updatedAt: "2024-01-09T00:00:00.000Z",
   },
@@ -209,7 +209,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "240 BC (records); 1705 (predicted)",
     imageUrl: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=800&q=80",
     description:
-      "Halley's Comet is a short-period comet visible from Earth every 75–76 years. It is the only known short-period comet visible to the naked eye and last appeared in 1986.",
+      "Komet Halley adalah komet berperiode pendek yang terlihat dari Bumi setiap 75–76 tahun sekali. Ini adalah satu-satunya komet berperiode pendek yang dapat dilihat dengan mata telanjang dan terakhir kali muncul pada tahun 1986.",
     createdAt: "2024-01-10T00:00:00.000Z",
     updatedAt: "2024-01-10T00:00:00.000Z",
   },
@@ -226,7 +226,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "—",
     imageUrl: "https://images.unsplash.com/photo-1614726365723-49cfae7c64c5?w=800&q=80",
     description:
-      "Mercury is the smallest planet in the Solar System and the closest to the Sun. It has extreme temperature swings and a heavily cratered surface.",
+      "Merkurius adalah planet terkecil di Tata Surya dan yang terdekat dengan Matahari. Planet ini memiliki fluktuasi suhu yang ekstrem dan permukaan yang dipenuhi kawah.",
     createdAt: "2024-01-11T00:00:00.000Z",
     updatedAt: "2024-01-11T00:00:00.000Z",
   },
@@ -243,7 +243,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "—",
     imageUrl: "https://images.unsplash.com/photo-1630694093867-4b947d812bf0?w=800&q=80",
     description:
-      "Venus is Earth's sister planet with a thick toxic atmosphere and a runaway greenhouse effect that makes it the hottest planet in the Solar System.",
+      "Venus adalah planet saudara Bumi dengan atmosfer tebal yang beracun dan efek rumah kaca tak terkendali yang menjadikannya planet terpanas di Tata Surya.",
     createdAt: "2024-01-12T00:00:00.000Z",
     updatedAt: "2024-01-12T00:00:00.000Z",
   },
@@ -260,7 +260,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "—",
     imageUrl: "https://images.unsplash.com/photo-1614313913007-2b4ae8ce32d6?w=800&q=80",
     description:
-      "Saturn is famous for its spectacular ring system made of ice and rock. It is a gas giant with dozens of moons, including Titan.",
+      "Saturnus terkenal dengan sistem cincinnya yang spektakuler yang terbuat dari es dan bebatuan. Planet ini merupakan raksasa gas dengan puluhan bulan, termasuk Titan.",
     createdAt: "2024-01-13T00:00:00.000Z",
     updatedAt: "2024-01-13T00:00:00.000Z",
   },
@@ -277,7 +277,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1781",
     imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
     description:
-      "Uranus is an ice giant that rotates on its side. Its pale blue-green color comes from methane in the atmosphere.",
+      "Uranus adalah raksasa es yang berputar miring pada porosnya. Warna biru-hijau pucatnya berasal dari kandungan metana di atmosfernya.",
     createdAt: "2024-01-14T00:00:00.000Z",
     updatedAt: "2024-01-14T00:00:00.000Z",
   },
@@ -294,7 +294,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1846",
     imageUrl: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&q=80",
     description:
-      "Neptune is the farthest known planet from the Sun. It has the strongest winds in the Solar System and a deep blue atmosphere.",
+      "Neptune adalah planet terjauh yang diketahui dari Matahari. Planet ini memiliki angin kencang terkuat di Tata Surya dan atmosfer berwarna biru tua.",
     createdAt: "2024-01-15T00:00:00.000Z",
     updatedAt: "2024-01-15T00:00:00.000Z",
   },
@@ -311,7 +311,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "—",
     imageUrl: "https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=800&q=80",
     description:
-      "The Moon is Earth's only natural satellite and the brightest object in the night sky. It influences tides and has been visited by humans.",
+      "Bulan adalah satu-satunya satelit alami Bumi dan objek paling terang di langit malam. Bulan memengaruhi pasang surut air laut dan telah dikunjungi oleh manusia.",
     createdAt: "2024-01-16T00:00:00.000Z",
     updatedAt: "2024-01-16T00:00:00.000Z",
   },
@@ -328,7 +328,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1655",
     imageUrl: "https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=800&q=80",
     description:
-      "Titan is Saturn's largest moon and the only moon with a dense atmosphere. It has lakes of liquid methane and is a prime target for astrobiology.",
+      "Titan adalah bulan terbesar Saturnus dan satu-satunya satelit alami yang memiliki atmosfer tebal. Titan memiliki danau metana cair dan merupakan target utama untuk penelitian astrobiologi.",
     createdAt: "2024-01-17T00:00:00.000Z",
     updatedAt: "2024-01-17T00:00:00.000Z",
   },
@@ -345,7 +345,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1610",
     imageUrl: "https://images.unsplash.com/photo-1454789548928-9efd52dc4031?w=800&q=80",
     description:
-      "Europa is an icy moon of Jupiter thought to hide a global subsurface ocean — one of the most promising places to search for life beyond Earth.",
+      "Europa adalah bulan es Jupiter yang diperkirakan menyembuyen samudra global di bawah permukaannya — salah satu tempat paling menjanjikan untuk mencari kehidupan di luar Bumi.",
     createdAt: "2024-01-18T00:00:00.000Z",
     updatedAt: "2024-01-18T00:00:00.000Z",
   },
@@ -362,7 +362,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1789",
     imageUrl: "https://images.unsplash.com/photo-1464802686167-b939a6910659?w=800&q=80",
     description:
-      "Enceladus is a small icy moon of Saturn that shoots water plumes from its south pole, evidence of a subsurface ocean.",
+      "Enceladus adalah bulan kecil berselimut es milik Saturnus yang menyemburkan semburan air dari kutub selatannya, membuktikan adanya samudra di bawah permukaannya.",
     createdAt: "2024-01-19T00:00:00.000Z",
     updatedAt: "2024-01-19T00:00:00.000Z",
   },
@@ -379,7 +379,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1801",
     imageUrl: "https://images.unsplash.com/photo-1543722530-d2c3201371e7?w=800&q=80",
     description:
-      "Ceres is the largest object in the asteroid belt and the only dwarf planet inside Neptune's orbit. It was visited by NASA's Dawn mission.",
+      "Ceres adalah objek terbesar di sabuk asteroid dan satu-satunya planet kerdil di dalam orbit Neptunus. Ceres telah dikunjungi oleh misi Dawn milik NASA.",
     createdAt: "2024-01-20T00:00:00.000Z",
     updatedAt: "2024-01-20T00:00:00.000Z",
   },
@@ -396,7 +396,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1807",
     imageUrl: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=800&q=80",
     description:
-      "Vesta is one of the largest asteroids and one of the brightest. It has a differentiated interior and a huge impact crater at its south pole.",
+      "Vesta adalah salah satu asteroid terbesar dan salah satu yang paling terang. Asteroid ini memiliki struktur interior yang terdiferensiasi dan kawah tabrakan raksasa di kutub selatannya.",
     createdAt: "2024-01-21T00:00:00.000Z",
     updatedAt: "2024-01-21T00:00:00.000Z",
   },
@@ -413,7 +413,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1930",
     imageUrl: "https://images.unsplash.com/photo-1516339901601-2e1b62dc0c45?w=800&q=80",
     description:
-      "Pluto is a dwarf planet in the Kuiper Belt with a heart-shaped glacier (Tombaugh Regio). New Horizons flew by in 2015.",
+      "Pluto adalah planet kerdil di Sabuk Kuiper dengan gletser berbentuk hati (Tombaugh Regio). Wahana New Horizons melintasinya pada tahun 2015.",
     createdAt: "2024-01-22T00:00:00.000Z",
     updatedAt: "2024-01-22T00:00:00.000Z",
   },
@@ -430,7 +430,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "Ancient",
     imageUrl: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=800&q=80",
     description:
-      "Sirius is the brightest star in Earth's night sky. It is a binary system consisting of a main-sequence star and a white dwarf companion.",
+      "Sirius adalah bintang paling terang di langit malam Bumi. Sirius merupakan sistem bintang biner yang terdiri dari bintang deret utama dan pendamping katai putih.",
     createdAt: "2024-01-23T00:00:00.000Z",
     updatedAt: "2024-01-23T00:00:00.000Z",
   },
@@ -447,7 +447,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1915",
     imageUrl: "https://images.unsplash.com/photo-1462332420958-a05d1e002413?w=800&q=80",
     description:
-      "Proxima Centauri is the closest known star to the Sun. It hosts at least one confirmed exoplanet in its habitable zone.",
+      "Proxima Centauri adalah bintang terdekat dari Matahari yang diketahui. Bintang ini menampung setidaknya satu eksoplanet terkonfirmasi di zona laik huni.",
     createdAt: "2024-01-24T00:00:00.000Z",
     updatedAt: "2024-01-24T00:00:00.000Z",
   },
@@ -464,7 +464,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "Ancient",
     imageUrl: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?w=800&q=80",
     description:
-      "Vega is a bright blue-white star in Lyra and was once the northern pole star. It was a standard for photometric systems.",
+      "Vega adalah bintang biru-putih terang di rasi bintang Lyra dan pernah menjadi bintang kutub utara. Vega sempat dijadikan standar untuk kalibrasi sistem fotometri.",
     createdAt: "2024-01-25T00:00:00.000Z",
     updatedAt: "2024-01-25T00:00:00.000Z",
   },
@@ -481,7 +481,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1731",
     imageUrl: "https://images.unsplash.com/photo-1464802686167-b939a6910659?w=800&q=80",
     description:
-      "The Crab Nebula is a supernova remnant from a star that exploded in 1054 AD. It contains a pulsar at its center.",
+      "Nebula Kepiting adalah sisa supernova dari bintang yang meledak pada tahun 1054 Masehi. Di pusat nebula ini terdapat bintang pulsar.",
     createdAt: "2024-01-26T00:00:00.000Z",
     updatedAt: "2024-01-26T00:00:00.000Z",
   },
@@ -498,7 +498,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1745",
     imageUrl: "https://images.unsplash.com/photo-1506443432602-ac2fcd6f54e0?w=800&q=80",
     description:
-      "The Eagle Nebula is a star-forming region famous for the Pillars of Creation — towering columns of gas and dust imaged by Hubble.",
+      "Nebula Elang adalah wilayah pembentukan bintang yang terkenal dengan struktur Pillars of Creation — pilar gas dan debu raksasa yang diabadikan oleh Teleskop Hubble.",
     createdAt: "2024-01-27T00:00:00.000Z",
     updatedAt: "2024-01-27T00:00:00.000Z",
   },
@@ -515,7 +515,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1773",
     imageUrl: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&q=80",
     description:
-      "The Whirlpool Galaxy is a classic grand-design spiral interacting with a smaller companion galaxy (NGC 5195).",
+      "Galaksi Pusaran adalah galaksi spiral berdesain agung klasik yang berinteraksi dengan galaksi pendamping yang lebih kecil (NGC 5195).",
     createdAt: "2024-01-28T00:00:00.000Z",
     updatedAt: "2024-01-28T00:00:00.000Z",
   },
@@ -532,7 +532,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1654 (approx.)",
     imageUrl: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=800&q=80",
     description:
-      "The Triangulum Galaxy is the third-largest member of the Local Group after Andromeda and the Milky Way.",
+      "Galaksi Triangulum adalah anggota terbesar ketiga dari Grup Lokal setelah galaksi Andromeda dan Bimasakti.",
     createdAt: "2024-01-29T00:00:00.000Z",
     updatedAt: "2024-01-29T00:00:00.000Z",
   },
@@ -549,7 +549,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1964 (X-ray source)",
     imageUrl: "https://images.unsplash.com/photo-1464802686167-b939a6910659?w=800&q=80",
     description:
-      "Cygnus X-1 is one of the strongest X-ray sources and the first widely accepted stellar-mass black hole candidate, feeding from a blue supergiant companion.",
+      "Cygnus X-1 adalah salah satu sumber sinar-X terkuat dan merupakan kandidat lubang hitam bermassa bintang pertama yang diterima secara luas, menyedot materi dari bintang pendamping superraksasa biru.",
     createdAt: "2024-01-30T00:00:00.000Z",
     updatedAt: "2024-01-30T00:00:00.000Z",
   },
@@ -566,7 +566,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "2020",
     imageUrl: "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=800&q=80",
     description:
-      "Comet NEOWISE was a spectacular naked-eye comet of 2020, delighting skywatchers worldwide with a bright tail.",
+      "Komet NEOWISE adalah komet spektakuler tahun 2020 yang dapat dilihat dengan mata telanjang, memukau pengamat bintang di seluruh dunia dengan ekornya yang terang.",
     createdAt: "2024-01-31T00:00:00.000Z",
     updatedAt: "2024-01-31T00:00:00.000Z",
   },
@@ -583,7 +583,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1610",
     imageUrl: "https://images.unsplash.com/photo-1614732414444-096e5f1122d5?w=800&q=80",
     description:
-      "Io is the most volcanically active body in the Solar System, continuously reshaped by tidal heating from Jupiter.",
+      "Io adalah satelit terdalam di antara empat satelit Galileo yang mengelilingi planet Jupiter. Satelit ini dipenuhi aktivitas vulkanik yang ekstrem akibat pemanasan pasang surut dari Jupiter.",
     createdAt: "2024-02-01T00:00:00.000Z",
     updatedAt: "2024-02-01T00:00:00.000Z",
   },
@@ -600,7 +600,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1610",
     imageUrl: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
     description:
-      "Ganymede is the largest moon in the Solar System — bigger than Mercury — and the only moon known to have its own magnetic field.",
+      "Ganymede adalah satelit alami terbesar di Tata Surya — bahkan lebih besar dari planet Merkurius — dan merupakan satu-satunya bulan yang diketahui memiliki medan magnet sendiri.",
     createdAt: "2024-02-02T00:00:00.000Z",
     updatedAt: "2024-02-02T00:00:00.000Z",
   },
@@ -617,7 +617,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "2014",
     imageUrl: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=800&q=80",
     description:
-      "Kepler-186f is the first validated Earth-size planet orbiting a distant star in the habitable zone — the range of distance where liquid water could pool on the surface.",
+      "Kepler-186f adalah planet seukuran Bumi pertama yang tervalidasi mengorbit bintang jauh di zona laik huni — rentang jarak di mana air permukaan berwujud cair dapat terbentuk.",
     createdAt: "2024-02-03T00:00:00.000Z",
     updatedAt: "2024-02-03T00:00:00.000Z",
   },
@@ -634,7 +634,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1970",
     imageUrl: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&q=80",
     description:
-      "TON 618 is a hyperluminous, broad-absorption-line quasar located near the North Galactic Pole. It contains one of the most massive black holes known.",
+      "TON 618 adalah kuasar garis penyerapan luas yang sangat terang dekat Kutub Galaksi Utara. Kuasar ini menyimpan salah satu lubang hitam paling masif yang pernah diketahui.",
     createdAt: "2024-02-04T00:00:00.000Z",
     updatedAt: "2024-02-04T00:00:00.000Z",
   },
@@ -651,7 +651,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1824",
     imageUrl: "https://images.unsplash.com/photo-1464802686167-b939a6910659?w=800&q=80",
     description:
-      "The Helix Nebula, also known as the 'Eye of God', is a large planetary nebula located in the constellation Aquarius. It is one of the closest bright planetary nebulae to Earth.",
+      "Nebula Helix, yang juga dikenal sebagai 'Mata Tuhan', adalah nebula planeter besar di rasi bintang Aquarius. Ini adalah salah satu nebula planeter terang terdekat dari Bumi.",
     createdAt: "2024-02-05T00:00:00.000Z",
     updatedAt: "2024-02-05T00:00:00.000Z",
   },
@@ -668,7 +668,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1781",
     imageUrl: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?w=800&q=80",
     description:
-      "The Sombrero Galaxy is a majestic lenticular galaxy in the constellation Virgo. It has a bright nucleus, an unusually large central bulge, and a prominent dust lane.",
+      "Galaksi Sombrero adalah galaksi lentikular megah di rasi bintang Virgo. Galaksi ini memiliki inti yang sangat terang, tonjolan pusat yang besar, dan jalur debu yang menonjol.",
     createdAt: "2024-02-06T00:00:00.000Z",
     updatedAt: "2024-02-06T00:00:00.000Z",
   },
@@ -685,7 +685,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "Ancient",
     imageUrl: "https://images.unsplash.com/photo-1543722530-d2c3201371e7?w=800&q=80",
     description:
-      "Polaris, commonly known as the North Star, is the brightest star in the constellation Ursa Minor. It is close to the north celestial pole, making it a key navigation star.",
+      "Polaris, yang dikenal sebagai Bintang Utara, adalah bintang paling terang di rasi bintang Ursa Minor. Posisinya yang dekat dengan kutub langit utara menjadikannya bintang pemandu navigasi yang krusial.",
     createdAt: "2024-02-07T00:00:00.000Z",
     updatedAt: "2024-02-07T00:00:00.000Z",
   },
@@ -702,7 +702,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "2017",
     imageUrl: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=800&q=80",
     description:
-      "Oumuamua is the first known interstellar object detected passing through the Solar System. It is highly elongated and exhibited non-gravitational acceleration.",
+      "Oumuamua adalah objek antarbintang pertama yang terdeteksi melintasi Tata Surya kita. Bentuknya sangat memanjang dan menunjukkan percepatan non-gravitasi.",
     createdAt: "2024-02-08T00:00:00.000Z",
     updatedAt: "2024-02-08T00:00:00.000Z",
   },
@@ -719,7 +719,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1610",
     imageUrl: "https://images.unsplash.com/photo-1614726365723-49cfae7c64c5?w=800&q=80",
     description:
-      "Callisto is the second-largest moon of Jupiter and the third-largest in the Solar System. It is the most heavily cratered object in the Solar System, with an ancient icy surface.",
+      "Callisto adalah satelit terbesar kedua di Jupiter dan ketiga di Tata Surya. Callisto adalah objek yang memiliki kawah paling padat di Tata Surya, dengan permukaan es kuno.",
     createdAt: "2024-02-09T00:00:00.000Z",
     updatedAt: "2024-02-09T00:00:00.000Z",
   },
@@ -736,7 +736,7 @@ export const SEED_OBJECTS = [
     yearDiscovered: "1877",
     imageUrl: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=800&q=80",
     description:
-      "Phobos is the larger and closer of the two natural satellites of Mars. It is a heavily cratered, non-spherical asteroid-like moon that orbits extremely close to Mars.",
+      "Phobos adalah satelit alami terbesar dan terdekat dari kedua satelit Mars. Satelit ini tidak berbentuk bulat, dipenuhi kawah layaknya asteroid, dan mengorbit sangat dekat dengan Mars.",
     createdAt: "2024-02-10T00:00:00.000Z",
     updatedAt: "2024-02-10T00:00:00.000Z",
   },
