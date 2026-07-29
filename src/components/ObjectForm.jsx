@@ -10,6 +10,7 @@ import {
   apiUpdateObject,
   apiUploadImage,
 } from "@/lib/api";
+import ImageCropper from "@/components/ImageCropper";
 
 const EMPTY = {
   name: "",
@@ -45,6 +46,9 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
   const [localPreview, setLocalPreview] = useState("");
   const [fileName, setFileName] = useState("");
   const [fileError, setFileError] = useState("");
+
+  const [cropSource, setCropSource] = useState("");
+  const [cropSourceFile, setCropSourceFile] = useState(null);
 
   useEffect(() => {
     if (mode !== "edit" || !objectId) {
@@ -139,14 +143,37 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
       return;
     }
 
+    const url = URL.createObjectURL(file);
+    setCropSource(url);
+    setCropSourceFile(file);
+  }
+
+  function handleCropComplete(croppedFile) {
     if (localPreviewRef.current) {
       URL.revokeObjectURL(localPreviewRef.current);
     }
-    const url = URL.createObjectURL(file);
+    const url = URL.createObjectURL(croppedFile);
     localPreviewRef.current = url;
-    setPendingFile(file);
+    setPendingFile(croppedFile);
     setLocalPreview(url);
-    setFileName(file.name);
+    setFileName(croppedFile.name);
+
+    if (cropSource) {
+      URL.revokeObjectURL(cropSource);
+    }
+    setCropSource("");
+    setCropSourceFile(null);
+  }
+
+  function handleCropCancel() {
+    if (cropSource) {
+      URL.revokeObjectURL(cropSource);
+    }
+    setCropSource("");
+    setCropSourceFile(null);
+    if (!pendingFile && fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   }
 
   function onChange(e) {
@@ -477,12 +504,12 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
                 <p className="border-b border-white/10 px-3 py-2 text-xs font-medium uppercase tracking-wide text-slate-400">
                   Pratinjau
                 </p>
-                <div className="aspect-video max-h-56">
+                <div className="aspect-video max-h-56 bg-black/40">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={preview}
                     alt="Pratinjau"
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain"
                     onError={(e) => {
                       e.currentTarget.onerror = null;
                       e.currentTarget.src = PLACEHOLDER_IMAGE;
@@ -532,6 +559,15 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
           </div>
         </form>
       </div>
+
+      {cropSource && cropSourceFile && (
+        <ImageCropper
+          src={cropSource}
+          originalFile={cropSourceFile}
+          onCrop={handleCropComplete}
+          onCancel={handleCropCancel}
+        />
+      )}
     </div>
   );
 }
