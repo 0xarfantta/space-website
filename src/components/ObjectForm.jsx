@@ -234,7 +234,7 @@ export default function ObjectForm({ mode = "create", objectId = null }) {
 
       if (mode === "edit" && objectId) {
         await apiUpdateObject(objectId, payload);
-        router.push(`/detail?id=${encodeURIComponent(objectId)}`);
+        router.push("/dashboard");
       } else {
         await apiCreateObject(payload);
         router.push("/dashboard");
