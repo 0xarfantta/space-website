@@ -78,7 +78,7 @@ export default function Navbar() {
         </nav>
 
         {/* Kanan: spacer seimbang di desktop / hamburger di mobile */}
-        <div className="flex h-9 w-9 shrink-0 items-center justify-end md:w-auto md:min-w-[4.5rem]">
+        <div className="col-start-3 flex h-9 w-9 shrink-0 items-center justify-end md:col-start-auto md:w-auto md:min-w-[4.5rem]">
           <button
             type="button"
             className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-base leading-none text-white backdrop-blur-md transition hover:bg-white/15 md:hidden"
