@@ -245,26 +245,28 @@ export default function BgScene() {
       />
 
       {/* Cosmic dust */}
-      <div className="absolute inset-0" style={parallax(8, 6)}>
-        {DUST.map((d) => (
-          <span
-            key={d.id}
-            className={`space-dust absolute rounded-full ${
-              motionOn ? "space-dust--float" : ""
-            }`}
-            style={{
-              left: `${d.left}%`,
-              top: `${d.top}%`,
-              width: d.size,
-              height: d.size,
-              opacity: d.opacity,
-              background: `radial-gradient(circle, rgba(${d.hue},0.55) 0%, transparent 70%)`,
-              animationDelay: `${d.delay}s`,
-              animationDuration: `${d.duration}s`,
-            }}
-          />
-        ))}
-      </div>
+      {mounted && (
+        <div className="absolute inset-0" style={parallax(8, 6)}>
+          {DUST.map((d) => (
+            <span
+              key={d.id}
+              className={`space-dust absolute rounded-full ${
+                motionOn ? "space-dust--float" : ""
+              }`}
+              style={{
+                left: `${d.left}%`,
+                top: `${d.top}%`,
+                width: d.size,
+                height: d.size,
+                opacity: d.opacity,
+                background: `radial-gradient(circle, rgba(${d.hue},0.55) 0%, transparent 70%)`,
+                animationDelay: `${d.delay}s`,
+                animationDuration: `${d.duration}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Cursor spotlight */}
       {motionOn && (
@@ -288,73 +290,79 @@ export default function BgScene() {
       )}
 
       {/* Far stars */}
-      <div className="absolute inset-0" style={parallax(-3, -2)}>
-        {FAR_STARS.map((s) => (
-          <span
-            key={s.id}
-            className={`absolute rounded-full ${motionOn ? "star" : ""}`}
-            style={{
-              left: `${s.left}%`,
-              top: `${s.top}%`,
-              width: s.size,
-              height: s.size,
-              opacity: s.opacity,
-              background: `rgb(${s.color})`,
-              boxShadow: `0 0 ${s.size * 2.5}px rgba(${s.color},0.7)`,
-              animationDelay: `${s.delay}s`,
-              animationDuration: `${s.duration}s`,
-            }}
-          />
-        ))}
-      </div>
+      {mounted && (
+        <div className="absolute inset-0" style={parallax(-3, -2)}>
+          {FAR_STARS.map((s) => (
+            <span
+              key={s.id}
+              className={`absolute rounded-full ${motionOn ? "star" : ""}`}
+              style={{
+                left: `${s.left}%`,
+                top: `${s.top}%`,
+                width: s.size,
+                height: s.size,
+                opacity: s.opacity,
+                background: `rgb(${s.color})`,
+                boxShadow: `0 0 ${s.size * 2.5}px rgba(${s.color},0.7)`,
+                animationDelay: `${s.delay}s`,
+                animationDuration: `${s.duration}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Mid stars */}
-      <div className="absolute inset-0" style={parallax(-8, -5)}>
-        {MID_STARS.map((s) => (
-          <span
-            key={s.id}
-            className={`absolute rounded-full ${motionOn ? "star" : ""}`}
-            style={{
-              left: `${s.left}%`,
-              top: `${s.top}%`,
-              width: s.size,
-              height: s.size,
-              opacity: s.opacity,
-              background: `rgb(${s.color})`,
-              boxShadow: `0 0 ${s.size * 3.5}px rgba(${s.color},0.85)`,
-              animationDelay: `${s.delay}s`,
-              animationDuration: `${s.duration}s`,
-            }}
-          />
-        ))}
-      </div>
+      {mounted && (
+        <div className="absolute inset-0" style={parallax(-8, -5)}>
+          {MID_STARS.map((s) => (
+            <span
+              key={s.id}
+              className={`absolute rounded-full ${motionOn ? "star" : ""}`}
+              style={{
+                left: `${s.left}%`,
+                top: `${s.top}%`,
+                width: s.size,
+                height: s.size,
+                opacity: s.opacity,
+                background: `rgb(${s.color})`,
+                boxShadow: `0 0 ${s.size * 3.5}px rgba(${s.color},0.85)`,
+                animationDelay: `${s.delay}s`,
+                animationDuration: `${s.duration}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Near bright stars */}
-      <div className="absolute inset-0" style={parallax(-14, -9)}>
-        {NEAR_STARS.map((s) => (
-          <span
-            key={s.id}
-            className={`space-star-near absolute ${motionOn ? "star" : ""}`}
-            style={{
-              left: `${s.left}%`,
-              top: `${s.top}%`,
-              width: s.size,
-              height: s.size,
-              opacity: s.opacity,
-              background: `rgb(${s.color})`,
-              boxShadow: `
-                0 0 ${s.size * 4}px rgba(${s.color},0.95),
-                0 0 ${s.size * 10}px rgba(${s.color},0.35)
-              `,
-              animationDelay: `${s.delay}s`,
-              animationDuration: `${s.duration}s`,
-            }}
-          />
-        ))}
-      </div>
+      {mounted && (
+        <div className="absolute inset-0" style={parallax(-14, -9)}>
+          {NEAR_STARS.map((s) => (
+            <span
+              key={s.id}
+              className={`space-star-near absolute ${motionOn ? "star" : ""}`}
+              style={{
+                left: `${s.left}%`,
+                top: `${s.top}%`,
+                width: s.size,
+                height: s.size,
+                opacity: s.opacity,
+                background: `rgb(${s.color})`,
+                boxShadow: `
+                  0 0 ${s.size * 4}px rgba(${s.color},0.95),
+                  0 0 ${s.size * 10}px rgba(${s.color},0.35)
+                `,
+                animationDelay: `${s.delay}s`,
+                animationDuration: `${s.duration}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Shooting stars */}
-      {motionOn &&
+      {mounted && motionOn &&
         SHOOTERS.map((s) => (
           <span
             key={s.id}
